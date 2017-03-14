@@ -5,7 +5,7 @@ title:      'The Noise Socket Protocol'
 
 
 1. Introduction
-================
+---------------------------
 
 Noise Socket is a secure transport layer protocol that is much simplier than TLS,
 easier to implement.
@@ -21,7 +21,7 @@ It is based on the [Noise protocol framework](http://noiseprotocol.org) which
 internaly uses only symmetric ciphers, hashes and DH to do secure handshakes.
 
 2. Overview 
-============ 
+---------------------------
 Noise Socket describes how to compose and parse handshake and transport messages, do versioning and negotiation.
 There is only one mandatory pattern that must be present in any first handshake message: [Noise_XX](http://noiseprotocol.org/noise.html#interactive-patterns).
 Noise_XX allows any combination of authentications (client, server, mutual, none) by using null
