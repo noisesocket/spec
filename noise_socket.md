@@ -4,7 +4,7 @@ title:      'The Noise Socket Protocol'
 ---
 
 
-1. Introduction
+**1. Introduction**
 ---------------------------
 
 Noise Socket is a secure transport layer protocol that is much simplier than TLS,
@@ -20,7 +20,7 @@ and other cases where TLS looks overcomplicated.
 It is based on the [Noise protocol framework](http://noiseprotocol.org) which
 internaly uses only symmetric ciphers, hashes and DH to do secure handshakes.
 
-2. Overview 
+**2. Overview** 
 ---------------------------
 Noise Socket describes how to compose and parse handshake and transport messages, do versioning and negotiation.
 There is only one mandatory pattern that must be present in any first handshake message: [Noise_XX](http://noiseprotocol.org/noise.html#interactive-patterns).
@@ -33,7 +33,7 @@ Traffic in Noise Socket is split into packets each less than or equal to 65535 b
 
 All sizes are in big endian form.
 
-3. Packet structure
+**3. Packet structure**
 ---------------------------
 
 Both handshake and transport packets have the following structure:
@@ -47,7 +47,7 @@ Both handshake and transport packets have the following structure:
       =PAYLOAD=
 ```
 
-4. Handshake packets
+**4. Handshake packets**
 ---------------------------
 
 The handshake process consists of set of messages which client and server send to each other. First two of them have a specific payload structure
@@ -97,7 +97,7 @@ After client gets server response there's no longer need in extra transport fiel
 3 messages are needed to be sent and received to implement full Noise_XX handshake.
 2 mesages  are needed to be sent and received to implement full Noise_IK handshake.
 
-5. Prologue
+**5. Prologue**
 ---------------------
 Noise [prologue](http://noiseprotocol.org/noise.html#prologue) is calculated as follows:
 - 1 byte amount of message types (N)
@@ -111,12 +111,12 @@ Noise [prologue](http://noiseprotocol.org/noise.html#prologue) is calculated as 
 </details>
 
 
-6. Handshake payload protection
+**6. Handshake payload protection**
 ---------------------
  - During XX handshake, only second and third messages may contain payloads. The first wold be sent in clear
  - During IK handshake, first and second messages may contain payloads.
  
-7. Data packets
+**7. Data packets**
 ---------------------
 
 After handshake is complete and both [Cipher states](http://noiseprotocol.org/noise.html#the-cipherstate-object) are created, all following packets must be encrypted.
@@ -127,7 +127,7 @@ The maximum amount of plaintext data that can be sent in one packet is
 65535 - 4(header size) - 16 (mac size) = 65515 bytes
 ```
 
-8. Payload fields
+**8. Payload fields**
 ---------------------------
 Each encrypted handshake payload as well as every encrypted transport message consists of 1 or more fields.
 Every field has the following structure:
