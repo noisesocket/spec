@@ -79,16 +79,16 @@ Second packet structure:
 Second handshake message full structure:
  ```
 =================PACKET=============================================================================
-[2 bytes len] | [1 byte index] [handshake message]
+[2 bytes len] | [1 byte index] [1 byte message type] [handshake message]
                 ====================================PAYLOAD=========================================
 ```
 
 After client gets server response there's no longer need in extra transport fields, so all following packets have the following structure:
 
  ```
-=================PACKET=============================================================================
-[2 bytes len] | [handshake nessage]
-                ====================================PAYLOAD=========================================
+=================PACKET=========================================
+[2 bytes len] | [           handshake message              ]
+                ==============PAYLOAD===========================
 ```
  
  
