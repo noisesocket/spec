@@ -33,8 +33,10 @@ Traffic in Noise Socket is split into packets each less than or equal to 65535 b
 
 All sizes are in big endian form.
 
-3. Handshake packet structure
+3. Packet structure
 ---------------------------
+
+Both handshake and transport packets have the following structure:
 
 - 2 bytes packet size (Ps)
 - data
