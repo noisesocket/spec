@@ -70,18 +70,22 @@ First handshake message full structure:
 ```
 
  
-In the **Second handshake message** server responds to client with the following structure
+In the **Second handshake message** server responds to client with the following structure:
+- 1 byte sub-message index server responds to
+- Optional additional data depending on sub-message type
 
-Second packet structure:
- - 1 byte index of the message that responder responds to
- - 1 byte message type it sends in case server supports noise pipes. See section [9.2](http://noiseprotocol.org/noise.html#compound-protocols-and-noise-pipes) of the original doc. 0 if server accepted IK message, 1 if it started XX_Fallback
- - **Noise message**
- 
- 
+|Message type    | Additional data|
+|----------------|-----------------|
+|Noise_XX        |   Nothing       |
+|Noise_IK        |   1 additional byte indicating usage of XXfallback in Noise Pipes, see [9.2](http://noiseprotocol.org/noise.html#compound-protocols-and-noise-pipes)|
+
+- Handshake message itself
+
+
 Second handshake message full structure:
  ```
 =================PACKET=============================================================================
-[2 bytes len] | [1 byte index] [1 byte message type] [handshake message]
+[2 bytes len] | [1 byte index] [..optional data..] [handshake message]
                 ====================================PAYLOAD=========================================
 ```
 
@@ -113,6 +117,9 @@ Noise [prologue](http://noiseprotocol.org/noise.html#prologue) is calculated as 
 
 **6. Handshake payload protection**
 ---------------------
+ Data that needs to be sent in handshake (certificates or 0-RTT data) must not be sent unencrypted. It means that no data can be sent in the first XX message.
+ Certificates must be sent together with the static keys (**s** token) for the receiving side to perform validation
+
  - During XX handshake, only second and third messages may contain payloads. The first wold be sent in clear
  - During IK handshake, first and second messages may contain payloads.
  
@@ -121,31 +128,25 @@ Noise [prologue](http://noiseprotocol.org/noise.html#prologue) is calculated as 
 
 After handshake is complete and both [Cipher states](http://noiseprotocol.org/noise.html#the-cipherstate-object) are created, all following packets must be encrypted.
 
-The maximum amount of plaintext data that can be sent in one packet is
-
-```
-65535 - 4(header size) - 16 (mac size) = 65515 bytes
-```
 
 **8. Payload fields**
 ---------------------------
 Each encrypted handshake payload as well as every encrypted transport message consists of 1 or more fields.
 Every field has the following structure:
 
- - 2 byte Size (including type)
- - 2 byte Sub-message type
+ - 2 byte field size (including type)
+ - 2 byte field type
  - Contents
+  
+The total size of all fields must not exceed 65535 - MACsize.
  
- 
-The minimum field size is 4 bytes (0 bytes of field payload data).  The total size of all fields must not exceed Ps - MACsize.
- 
+**9. Payload field types** 
  Each Noise Socket implementation must support the following two message sub-types:
  
  `0: Padding`
  
  `1: Primary data channel`
 
-The minimum field size is 4 bytes (0 bytes of field payload data).  The total size of all fields must not exceed Ps - MACsize.
 
 Message types 0 to 1023 are reserved for use in this and future versions of the NoiseSocket specification.  Message types 1024 to 65535 are application-defined.
 
@@ -157,7 +158,7 @@ A minimal implementation of NoiseSocket supports message types 0 and 1 to provid
 
 This format is also used in handshake message payloads if the payload size is non-zero.
 
-9. Re-keying
+10. Re-keying
 -------------------
 
 ...
