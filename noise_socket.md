@@ -140,7 +140,8 @@ Every field has the following structure:
   
 The total size of all fields must not exceed 65535 - MACsize.
  
-**9. Payload field types** 
+**8.1. Payload field types** 
+---
  Each Noise Socket implementation must support the following two message sub-types:
  
  `0: Padding`
