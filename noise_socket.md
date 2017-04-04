@@ -142,12 +142,14 @@ The total size of all fields must not exceed 65535 - MACsize.
  
 **8.1. Payload field types** 
 ---
- Each Noise Socket implementation must support the following two message sub-types:
+ Each Noise Socket implementation must support the following three message sub-types:
  
  `0: Padding`
  
  `1: Primary data channel`
-
+ 
+ `2: Max packet size negotiation`
+ 
 
 Message types 0 to 1023 are reserved for use in this and future versions of the NoiseSocket specification.  Message types 1024 to 65535 are application-defined.
 
@@ -155,7 +157,12 @@ This version of the specification defines message type **0** as padding.  The fi
 
 Message type **1** is assigned to the primary data channel within the session if the application does not have its own way of identifying separate channels.
 
-A minimal implementation of NoiseSocket supports message types 0 and 1 to provide a TLS-style transparent data link.  More complex applications may forbid the use of message type 1 and use their own message types for identifying separate channels of communication.  Padding must always be supported.
+Message type **2** is for setting the maximum allowed packet size and used only in handshake. It is 2-byte big-endian 16bit unsigned number.
+If a client does not have intention to reduce the default max packet size, it should respect the server's value (if it exists). Otherwise the server should use client's max packet size value.
+**Max packet size value is not allowed to be lower than 128 (bytes)**. The packet length header (2 bytes) is not included when calculating max packet size
+
+
+A minimal implementation of NoiseSocket supports message types 0, 1 and 2 to provide a TLS-style transparent data link.  More complex applications may forbid the use of message type 1 and use their own message types for identifying separate channels of communication.  Padding must always be supported.
 
 This format is also used in handshake message payloads if the payload size is non-zero.
 
