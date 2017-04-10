@@ -60,7 +60,7 @@ Each handshake sub-message contains following fields:
 **Noise message** is received by calling **WriteMessage** on the corresponding [HandshakeState](http://noiseprotocol.org/noise.html#the-handshakestate-object)
 
 **4.2. Second handshake message**
- 
+------------------------- 
 In the **Second handshake message** server responds to client with the following structure:
 - 1 byte sub-message index server responds to
 
