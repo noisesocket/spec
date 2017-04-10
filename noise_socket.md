@@ -47,7 +47,8 @@ Both handshake and transport packets have the following structure:
 The handshake process consists of set of messages which client and server send to each other. First two of them have a specific data structure
 
 
-**5. First handshake message** 
+**4.1. First handshake message** 
+---------------------------
 In the **First handshake message** client offers server a set of sub-messages, each of which corresponds to a concrete [Noise protocol](http://noiseprotocol.org/noise.html#protocol-names)
 
 Each handshake sub-message contains following fields:
@@ -58,7 +59,7 @@ Each handshake sub-message contains following fields:
 
 **Noise message** is received by calling **WriteMessage** on the corresponding [HandshakeState](http://noiseprotocol.org/noise.html#the-handshakestate-object)
 
-**6. Second handshake message**
+**4.2. Second handshake message**
  
 In the **Second handshake message** server responds to client with the following structure:
 - 1 byte sub-message index server responds to
@@ -66,7 +67,7 @@ In the **Second handshake message** server responds to client with the following
 - Handshake message
 
 
-**7. Prologue**
+**5. Prologue**
 ---------------------
 Noise [prologue](http://noiseprotocol.org/noise.html#prologue) is calculated as follows:
 - 1 byte number of message types (N)
@@ -74,19 +75,19 @@ Noise [prologue](http://noiseprotocol.org/noise.html#prologue) is calculated as 
   -- 1 byte message type length (L)
   -- L bytes message type (Noise protocol string)
 
-**8. Handshake payload protection**
+**6. Handshake payload protection**
 ---------------------
  If you send any handshake data in the first XX message, it will be sent unencrypted and unauthenticated.
  Certificates must be sent together with the static keys (**s** token) for the receiving side to perform validation
 
  
-**9. Data packets**
+**7. Data packets**
 ---------------------
 
 After handshake is complete and both [Cipher states](http://noiseprotocol.org/noise.html#the-cipherstate-object) are created, all following packets must be encrypted using those cipherstates.
 
 
-**10. Payload fields**
+**8. Payload fields**
 ---------------------------
 Each encrypted handshake payload as well as every encrypted transport message consists of 1 or more fields.
 Every field has the following structure:
@@ -97,7 +98,7 @@ Every field has the following structure:
   
 The total size of all fields must not exceed 65535 - MACsize.
  
-**10.1. Payload field types** 
+**8.1. Payload field types** 
 ---
  Each Noise Socket implementation must support the following three message sub-types:
  
@@ -124,6 +125,7 @@ A minimal implementation of NoiseSocket supports message types 0, 1 and 2 to pro
 This format is also used in handshake message payloads if the payload size is non-zero.
 
 **Appendix**
+------------------
 - An example prologue in HEX:
 <details> 
  <summary>An example of such prologue would be: (expand to view in HEX) </summary>
