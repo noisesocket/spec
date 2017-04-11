@@ -82,17 +82,15 @@ An example of such prologue could be found in Appendix
 After handshake is complete and both [Cipher states](http://noiseprotocol.org/noise.html#the-cipherstate-object) are created, all following packets must be encrypted using those cipherstates.
 
 
-**7. Payload fields**
+**7. Packet fields**
 ---------------------------
-Each encrypted handshake payload as well as every encrypted transport message consists of 1 or more fields.
+Each encrypted handshake payload as well as every encrypted transport packet consists of 1 or more fields.
 Every field has the following structure:
 
  - 2 byte field size (including type)
  - 2 byte field type
  - Contents
   
-The total size of all fields must not exceed 65535 - MACsize.
- 
 **8 Payload field types** 
 -------------
 Message types 0 to 1023 are reserved for use in this and future versions of the NoiseSocket specification.  Message types 1024 to 65535 are application-defined.
