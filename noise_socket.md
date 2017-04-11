@@ -91,11 +91,11 @@ Every field has the following structure:
  - 2 byte field type
  - Contents
   
-**8 Payload field types** 
+**8 Field types** 
 -------------
-Message types 0 to 1023 are reserved for use in this and future versions of the NoiseSocket specification.  Message types 1024 to 65535 are application-defined.
+Types 0 to 1023 are reserved for use in this and future versions of the NoiseSocket specification. Types 1024 to 65535 are application-defined.
 
-We introduce several payload field types that may or may not be supported by your implementation. Only the "Primary data channel" field type is mandatory for support by any implementation
+We introduce several payload field types that may or may not be supported by your implementation. Only the "Data" field type is mandatory for support by any implementation
 
 
  `0: Data`
@@ -107,20 +107,20 @@ We introduce several payload field types that may or may not be supported by you
 
 **8.0. Data** 
 -------------
-Message type **1** is assigned to the data channel within the session.
+Message type **0** is assigned to the data channel within the session.
 
 **8.1. Padding** 
 -------------
-The field payload data is ignored and should contain random bytes.  If the overall message length would have 1 to 3 bytes left over once all fields are parsed, those bytes will also contain random padding without a field header.
+Thi field's contents is ignored and should contain random bytes.  If the overall message length would have 1 to 3 bytes left over once all fields are parsed, those bytes will also contain random padding without a field header.
 
 **8.2. Packet size negotiation** 
 -------------
-Message type **2** is for setting the maximum allowed packet size and used only in handshake. It is 2-byte big-endian 16bit unsigned number.
+Message type **2** is for setting the maximum allowed packet size and used only in handshake. It is 2-byte big-endian unsigned number.
 If a client does not have intention to reduce the default max packet size, it should respect the server's value (if it exists). Otherwise the server should use client's max packet size value.
 **Max packet size value is not allowed to be lower than 128 (bytes)**. The packet length header (2 bytes) is not included when calculating max packet size
 
 
-A minimal implementation of NoiseSocket supports message type 1  to provide a TLS-style transparent data link.  
+A minimal implementation of NoiseSocket supports message type 0 to provide a TLS-style transparent data link.  
 This format is also used in handshake message payloads if the payload size is non-zero.
 
 **Appendix**
