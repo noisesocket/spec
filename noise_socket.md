@@ -138,6 +138,6 @@ Initial message is moved to the root to reduce the file size. It contains 16 sub
 "Server" chooses which sub-message to answer and this forms a session. 
 Each session contains an array of transport messages which consist of raw wire data ("Packet" field), payload and fields
 
-"Payload" is the representation of Noise socket fields in the order they appear in nonempty payload. It may or may not be present during handshake (1st XX message has always an empty payload).
+"Payload" is the representation of Noise socket fields in the order they appear in nonempty message payload. It may or may not be present during handshake (1st XX message has always an empty payload).
 
 Nonempty payload contains 1 or more fields. There's one field during handshake (dummy type 1024) and two (0 - data and 1 - padding) for transport messages.
