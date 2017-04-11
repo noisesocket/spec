@@ -70,11 +70,10 @@ In the **Second handshake message** server responds to client with the following
 **5. Prologue**
 ---------------------
 Noise [prologue](http://noiseprotocol.org/noise.html#prologue) is calculated as follows:
-- 1 byte number of message types (N)
-- N times:
-
-  -- 1 byte message type length (L)
-  -- L bytes message type (Noise protocol string)
+* 1 byte number of message types (N)
+* N times:
+  * 1 byte message type length (L)
+  * L bytes message type (Noise protocol string)
 
 An example of such prologue could be found in Appendix
 
