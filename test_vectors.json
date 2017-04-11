@@ -1,0 +1,1430 @@
+{
+  "name": "NoiseSocket",
+  "init_prologue": "101c4e6f6973655f58585f32353531395f41455347434d5f5348413235361d4e6f6973655f58585f32353531395f41455347434d5f424c414b4532621c4e6f6973655f58585f32353531395f41455347434d5f5348413531321d4e6f6973655f58585f32353531395f41455347434d5f424c414b453273204e6f6973655f58585f32353531395f436861436861506f6c795f534841323536214e6f6973655f58585f32353531395f436861436861506f6c795f424c414b453262204e6f6973655f58585f32353531395f436861436861506f6c795f534841353132214e6f6973655f58585f32353531395f436861436861506f6c795f424c414b4532731c4e6f6973655f494b5f32353531395f41455347434d5f5348413235361d4e6f6973655f494b5f32353531395f41455347434d5f424c414b4532621c4e6f6973655f494b5f32353531395f41455347434d5f5348413531321d4e6f6973655f494b5f32353531395f41455347434d5f424c414b453273204e6f6973655f494b5f32353531395f436861436861506f6c795f534841323536214e6f6973655f494b5f32353531395f436861436861506f6c795f424c414b453262204e6f6973655f494b5f32353531395f436861436861506f6c795f534841353132214e6f6973655f494b5f32353531395f436861436861506f6c795f424c414b453273",
+  "init_static": "0001020300010203000102030001020300010203000102030001020300010203",
+  "init_ephemeral": "0001000100010001000100010001000100010001000100010001000100010001",
+  "init_remote_static": "7f1844536de13929d289ed6e904e080f9e44cad25edd1fb2cd03a8758df2b527",
+  "resp_static": "0001020304000102030400010203040001020304000102030400010203040001",
+  "resp_ephemeral": "0001020001020001020001020001020001020001020001020001020001020001",
+  "initial_message": "07081c4e6f6973655f58585f32353531395f41455347434d5f53484132353600206e230d8b0503d567a6be48ec5d0cb6f97979784ae6de477a2096c0bdaa6a9e771d4e6f6973655f58585f32353531395f41455347434d5f424c414b45326200206e230d8b0503d567a6be48ec5d0cb6f97979784ae6de477a2096c0bdaa6a9e771c4e6f6973655f58585f32353531395f41455347434d5f53484135313200206e230d8b0503d567a6be48ec5d0cb6f97979784ae6de477a2096c0bdaa6a9e771d4e6f6973655f58585f32353531395f41455347434d5f424c414b45327300206e230d8b0503d567a6be48ec5d0cb6f97979784ae6de477a2096c0bdaa6a9e77204e6f6973655f58585f32353531395f436861436861506f6c795f53484132353600206e230d8b0503d567a6be48ec5d0cb6f97979784ae6de477a2096c0bdaa6a9e77214e6f6973655f58585f32353531395f436861436861506f6c795f424c414b45326200206e230d8b0503d567a6be48ec5d0cb6f97979784ae6de477a2096c0bdaa6a9e77204e6f6973655f58585f32353531395f436861436861506f6c795f53484135313200206e230d8b0503d567a6be48ec5d0cb6f97979784ae6de477a2096c0bdaa6a9e77214e6f6973655f58585f32353531395f436861436861506f6c795f424c414b45327300206e230d8b0503d567a6be48ec5d0cb6f97979784ae6de477a2096c0bdaa6a9e771c4e6f6973655f494b5f32353531395f41455347434d5f534841323536007e6e230d8b0503d567a6be48ec5d0cb6f97979784ae6de477a2096c0bdaa6a9e77ded33f2edf815b80a131f4aa4bccd0ff6ba435af788d31c8b3ded3d2e125ca10612a1ba16321d54abf0859f8dc7f9e0668630e67d96630061d31ff896256b90d3316afff955959a0827189e6af40a10aa1766f042b321a2b22e3018590331d4e6f6973655f494b5f32353531395f41455347434d5f424c414b453262007e6e230d8b0503d567a6be48ec5d0cb6f97979784ae6de477a2096c0bdaa6a9e7717451186a32c7e6daf4ac9a94193e693ea9e83cae1446cef4ea45f545ba07f521f7fb8cac87f8ea1e0deb2b4486aad006bb0282a755347160fc340793958276e59786b09839015df030d5f63a0672a0b102cd8930b07ec768ef99f3d70781c4e6f6973655f494b5f32353531395f41455347434d5f534841353132007e6e230d8b0503d567a6be48ec5d0cb6f97979784ae6de477a2096c0bdaa6a9e777f89a3bf0ec848072b6afc56215d705e4e6e7148336af16dc3b0eaf82745ab96d8a41ac8ee06df2356e284c93c565aa5087376b2b04beb3680afd499b5bd9542881d18756783706d97f3786b6068b6ce595f652953290db4b994417a9ed41d4e6f6973655f494b5f32353531395f41455347434d5f424c414b453273007e6e230d8b0503d567a6be48ec5d0cb6f97979784ae6de477a2096c0bdaa6a9e7791ffd98836d76a63b1ae6cf7c8d152bc8d1bf91af7e3db5a04721e8a1432814e1697054ce5a625e6c94191146c4a93ccf00e3eb37f287157f9990a5b841d7df4f34891082ee00736986bf19c7943ee60fad68a3954216405137b8108b825204e6f6973655f494b5f32353531395f436861436861506f6c795f534841323536007e6e230d8b0503d567a6be48ec5d0cb6f97979784ae6de477a2096c0bdaa6a9e777c5e631b5fd5e369983f6a083743be4c0a0bb51327878ccb91aa05222b51ed832510c7e6d122452985654f8b44470099d07abff359645161d2483381850fba2b43910dbdcc86a5f58152cf87ddec06af49292639b878913276873f28e1d2214e6f6973655f494b5f32353531395f436861436861506f6c795f424c414b453262007e6e230d8b0503d567a6be48ec5d0cb6f97979784ae6de477a2096c0bdaa6a9e7710808dd51c7ebd4e9beab9e8c46b2a7cad34fb3ad9b78d855c3af2367c1b480393d78e73dbb65f79ae21ec14051554df296f9208723d424a523ae3dd6c7b554bdb47feaf7d0bc8b4b1b7192c0f12554fdd869c24290ef528eb72bebd889a204e6f6973655f494b5f32353531395f436861436861506f6c795f534841353132007e6e230d8b0503d567a6be48ec5d0cb6f97979784ae6de477a2096c0bdaa6a9e77af9ed1cbc554ac6507691741749ed940c92dca6d1510059b599e373b1e6d612bab02e72c9cff7d0da1a5c01277eeb7511e88da5cab50d8317f667f90e7b4876835396d02deded3a022a61707d398d15e1a8d8ee12f33c0bc5853f8e405c4214e6f6973655f494b5f32353531395f436861436861506f6c795f424c414b453273007e6e230d8b0503d567a6be48ec5d0cb6f97979784ae6de477a2096c0bdaa6a9e77088ed6a74cba961243cee1fc1cd76497457a5746d95082553d4948e3ac4b5417ffcd47a0d9997d6c2f88eeef0d2339be0867f7b452b5baac1fe0554d40ec07c923a105c66ed7775a1080e3850373345eccebfc2fab9ecc812a4e8223f8a3",
+  "protocols": [
+    "Noise_XX_25519_AESGCM_SHA256",
+    "Noise_XX_25519_AESGCM_BLAKE2b",
+    "Noise_XX_25519_AESGCM_SHA512",
+    "Noise_XX_25519_AESGCM_BLAKE2s",
+    "Noise_XX_25519_ChaChaPoly_SHA256",
+    "Noise_XX_25519_ChaChaPoly_BLAKE2b",
+    "Noise_XX_25519_ChaChaPoly_SHA512",
+    "Noise_XX_25519_ChaChaPoly_BLAKE2s",
+    "Noise_IK_25519_AESGCM_SHA256",
+    "Noise_IK_25519_AESGCM_BLAKE2b",
+    "Noise_IK_25519_AESGCM_SHA512",
+    "Noise_IK_25519_AESGCM_BLAKE2s",
+    "Noise_IK_25519_ChaChaPoly_SHA256",
+    "Noise_IK_25519_ChaChaPoly_BLAKE2b",
+    "Noise_IK_25519_ChaChaPoly_SHA512",
+    "Noise_IK_25519_ChaChaPoly_BLAKE2s"
+  ],
+  "sessions": [
+    {
+      "index": 0,
+      "pattern": "XX",
+      "dh": "25519",
+      "cipher": "AESGCM",
+      "hash": "SHA256",
+      "handshake_hash": "3b44b1f231e67ee0bd0ec1fa5c8cbe35c7db48f4482bfc7ae4c6898924beb1c9",
+      "messages": [
+        {
+          "payload": "",
+          "fields": null
+        },
+        {
+          "payload": "001a04007b6f776e65723a22626f62407365727665722e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22626f62407365727665722e636f6d227d"
+            }
+          ],
+          "packet": "007d009f971588c6fe932c8908d6925522542c13dd3c2d9b84286b228ee76903bb1b3a48e9839afd84d5df2f70ceca8ad5236c18a398c2fd739f6bf9d5671e1534d21f02d943bd4dee25f03311c812a54e28b6b00b0d030b69c817b22051cb8a371a5c3656666663dac517548a978066c2a686f44a214b685eb0ab49f0b9e2"
+        },
+        {
+          "payload": "001c04007b6f776e65723a22616c69636540636c69656e742e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22616c69636540636c69656e742e636f6d227d"
+            }
+          ],
+          "packet": "005e5a02b1c707786c72897fbe7eb0a288593d15f5992b7d3112d7da33bd518ef31551db2e9224a3797cd4a7b25355e7768b1bd635e932118b5bb2245274c8c920b8290d09cba59bb5fbb8815975b51aa1af3e20e27e05febd16b75031df95ea"
+        },
+        {
+          "payload": "000d00006797c68ed7ba6c4f7c1d94000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "6797c68ed7ba6c4f7c1d94"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "00285aa201e9a158e10459efe9629bccb04e15b631aa45d8ec568d9e2e0c3627d83a0bb2f700b2b75999"
+        },
+        {
+          "payload": "000f000078386c14fe4f4cc2bb949653cf00050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "78386c14fe4f4cc2bb949653cf"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "002862608c992e84ea89175f66cfad65ab9801919f0ef0db7dce56f655d06e2d64cb374f31447860a056"
+        },
+        {
+          "payload": "000d000087871fb0a634905cb0428e000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "87871fb0a634905cb0428e"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "0028ee443bf2dbcbbdab052c8a4a3b86660a7281ada98ac84da5c71c50c74508e952442c42bfa791eb9e"
+        },
+        {
+          "payload": "000f0000d9b9c561f2820c5cc71d653ff900050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "d9b9c561f2820c5cc71d653ff9"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "0028f96c12d222788a2d70195be66d2e25c67d2fc532318efdca1413ba9ff7d2ad55659b5d53cd905259"
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "pattern": "XX",
+      "dh": "25519",
+      "cipher": "AESGCM",
+      "hash": "BLAKE2b",
+      "handshake_hash": "089c39a76a002c3122d761a52adde63de973d89ab03a1ab6503785ea812dcae9c3aceac0cd0085ea88a83aa0172a92f48a03177b78d929c8555c726ac57e2a12",
+      "messages": [
+        {
+          "payload": "",
+          "fields": null
+        },
+        {
+          "payload": "001a04007b6f776e65723a22626f62407365727665722e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22626f62407365727665722e636f6d227d"
+            }
+          ],
+          "packet": "007d019f971588c6fe932c8908d6925522542c13dd3c2d9b84286b228ee76903bb1b3a9bb2835a6557d896981d5bb858298c1718c478b15c9688fcb470ff8c5f4fa1c935e9c803b83f1e621ec91134d739456bfcd11e7cc8c028b27bbb70ce7c3f4243dfeb9913aacb2454fdaa2272e5b00f16bb054c1918e0dcdde1d9f7a4"
+        },
+        {
+          "payload": "001c04007b6f776e65723a22616c69636540636c69656e742e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22616c69636540636c69656e742e636f6d227d"
+            }
+          ],
+          "packet": "005e476495c37dd895f168e56c9823ed21d51f7c37add00ea37dba93bf4eb96b702e8649e495720561fcbe8ade4af2e223d5f4bf2aafcbe96dcb5068e9dc9301d8b921083e6a182726406d34d24e7c0b003dd1c001d214c472be32c8f9f58d87"
+        },
+        {
+          "payload": "000d000047537ac86dca9aacfef24d000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "47537ac86dca9aacfef24d"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "0028b4238b5724a8b31694e313250816c05512e0695c0267da85f423c9d0e43d89a77aa33ae34840e94f"
+        },
+        {
+          "payload": "000f0000a2a409f071f8ebaf191f59befb00050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "a2a409f071f8ebaf191f59befb"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "0028f3d64923d2fefc556b506b6b2905e01d5a6e59b2813a02a821161de49fcbd4f61eca6a911bb1d359"
+        },
+        {
+          "payload": "000d0000451f2b765bb2c3b73c49ff000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "451f2b765bb2c3b73c49ff"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "002822823c6bcdd22dea71f0be9e351b4e4dbef80e0bddabf03589903852cc1b0430f8798c8b06c433bd"
+        },
+        {
+          "payload": "000f00006cac0a4203d8b8efaed87d9d4a00050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "6cac0a4203d8b8efaed87d9d4a"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "00287750240b1ec1d6330f3a196db780046572bb2ace4f0fd0925c4b7031cb302dacbf7927f6a6991609"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "pattern": "XX",
+      "dh": "25519",
+      "cipher": "AESGCM",
+      "hash": "SHA512",
+      "handshake_hash": "d72f88fc688265d18e9b2905dfb6a9ccb73cc282bace23c9386942e6f90a7abf06b4bd65406aa186528ac75147035a1271a73e672e33fb5bce504e1ba4ee12cd",
+      "messages": [
+        {
+          "payload": "",
+          "fields": null
+        },
+        {
+          "payload": "001a04007b6f776e65723a22626f62407365727665722e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22626f62407365727665722e636f6d227d"
+            }
+          ],
+          "packet": "007d029f971588c6fe932c8908d6925522542c13dd3c2d9b84286b228ee76903bb1b3a7c8d8234d7c888305ff4f2d3ad610c99e5eae374216f9da46078ad01a14a7f82bce0a78d200c8417ce256ed48db0b7fc556c229f0758c31599af9edff3b20d579bbee6274636210d69be04d075bdfe9fb0481b1dcff78675f14f3dc2"
+        },
+        {
+          "payload": "001c04007b6f776e65723a22616c69636540636c69656e742e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22616c69636540636c69656e742e636f6d227d"
+            }
+          ],
+          "packet": "005e5ff72f3c0fd52f7c095aa3341174d950f0e0fa62344b57425b0a82f3c9b8f98ea5ee999b7562c6092458361ec9bb02506e1003e6a6e8aa6d0d5307847bb523dc85d18e32278c33172d981e948fab5e510fad7ade2f6d0bd001cdd6553a85"
+        },
+        {
+          "payload": "000d000044620781c920e7e8b55789000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "44620781c920e7e8b55789"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "00289ef08bf2925c555effd787a470f3f176c9301de2764d3870ee11165d113eca783b9bd787a438e711"
+        },
+        {
+          "payload": "000f0000d2fa4a46702718ce626030b05500050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "d2fa4a46702718ce626030b055"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "0028094577c7191e945ff822d7d6fa816da9d399372dd530c84d87c1d87c5a38a3e97b1633cffd8d51e5"
+        },
+        {
+          "payload": "000d00007d924f94164e4cb75b9e05000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "7d924f94164e4cb75b9e05"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "002875d064b8f82dd05e5559cb2f9db77c9e61fc64edbede5d21c411f5a37c83a852ce8ed0f20aaf1b09"
+        },
+        {
+          "payload": "000f0000837af78a57662b007f5872eaad00050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "837af78a57662b007f5872eaad"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "00286518e0f1b2767ccff52511e52e232ec33f4359afbc8f92cf6d3e83b00df99802e693701e0fde77b2"
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "pattern": "XX",
+      "dh": "25519",
+      "cipher": "AESGCM",
+      "hash": "BLAKE2s",
+      "handshake_hash": "41fcfaf0846924c1ab3ebeeeed173352e5c7fe2899ca376da9f787bec5621d08",
+      "messages": [
+        {
+          "payload": "",
+          "fields": null
+        },
+        {
+          "payload": "001a04007b6f776e65723a22626f62407365727665722e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22626f62407365727665722e636f6d227d"
+            }
+          ],
+          "packet": "007d039f971588c6fe932c8908d6925522542c13dd3c2d9b84286b228ee76903bb1b3a19228d756fa4f2776e5f70b2b9462b7a8ad3b670817a948808476d6757f7a387dd76b95bf580b3e189ba1f57a4555cce03f8d0cd4e1db1df45e2b36cbd7132c9454f74aad5cf132f855992ebb0830666bdf2489e03e4cd76f4c637bc"
+        },
+        {
+          "payload": "001c04007b6f776e65723a22616c69636540636c69656e742e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22616c69636540636c69656e742e636f6d227d"
+            }
+          ],
+          "packet": "005e671642ea9deab04a02b17eb4c564c355702f8dd4fc8d645f2c2daf6c9969c556ed3fb820cbbfd0daec129f3bf0f4cfb46b8a88b9699d17902f76cceece03bca302e4cd43981a52cd2701325ac9806143d492062d2678d32f7b9a9652a0b9"
+        },
+        {
+          "payload": "000d0000fcfb839e69fde6ea765c99000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "fcfb839e69fde6ea765c99"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "00285f4051c933bb1f1becdbcef9ac77f278a6059fcf1f4e6131bcb07442d888650d0d5c1e5f10243843"
+        },
+        {
+          "payload": "000f000016fe35a3d5674352e6da6a5a5200050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "16fe35a3d5674352e6da6a5a52"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "002835bffa418324d5c3d1582095333e4d25685f51e7b6efe530056979bad7339335a6adb9754499ce69"
+        },
+        {
+          "payload": "000d0000e09e770f381f29f078564b000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "e09e770f381f29f078564b"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "00280855410edc55f2fa87754f5c0f9eff90efca2d82258d39ade98599bbc466231cf652b48e292cbd36"
+        },
+        {
+          "payload": "000f000062cbbd3e4f6300a7f5ba214cd500050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "62cbbd3e4f6300a7f5ba214cd5"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "00287de9f7412bba5e3f480be1e710fdfb93b224694793fef0b8c98d7519cd2e0b97b31d98eac362ae0d"
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "pattern": "XX",
+      "dh": "25519",
+      "cipher": "ChaChaPoly",
+      "hash": "SHA256",
+      "handshake_hash": "59b90a690f5612a2be75f3e9bb8932cbe2239f2deeb49f2d809e0c1a0ff631e9",
+      "messages": [
+        {
+          "payload": "",
+          "fields": null
+        },
+        {
+          "payload": "001a04007b6f776e65723a22626f62407365727665722e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22626f62407365727665722e636f6d227d"
+            }
+          ],
+          "packet": "007d049f971588c6fe932c8908d6925522542c13dd3c2d9b84286b228ee76903bb1b3af130d0113b994a37340a034d95a8f2c9774e23331c144b8065e940ee1e7a169de6a77073f64ca97f621d6e34ff3b847a390ee2ec285cde256830f2470572fb87fc225bb858551b8a170270ffeccf4146d924b6fc1156276bc5f2ad1f"
+        },
+        {
+          "payload": "001c04007b6f776e65723a22616c69636540636c69656e742e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22616c69636540636c69656e742e636f6d227d"
+            }
+          ],
+          "packet": "005e29a69a0736f6f7f6908b59c1fde62737ac6d1d4eea10e997e04e096c8e6611682a279fa60c8a44a8f71fbf74705e305c1ab373a4a40e0142dc40cc8fb14100e6751b95a6aeb01c3ac2cc3fa6c52ed99f1ed32b38fbac32e5a328b6d386d2"
+        },
+        {
+          "payload": "000d000010a7761ab22c9874d36ca1000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "10a7761ab22c9874d36ca1"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "00283cf01776a7dce50307b17a3a4958f7e2ac5884a6e7e956dc3b75b10812344721d57874ba8d4cf9a4"
+        },
+        {
+          "payload": "000f0000e3c3970c811e1adf10aea2fa8700050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "e3c3970c811e1adf10aea2fa87"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "00287c62a6774c205e186d99137ec5a486d363c981bf8eaf413e5b1a00a9200d3ed686510c762b228e13"
+        },
+        {
+          "payload": "000d0000cd012f8e98ac162926bdee000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "cd012f8e98ac162926bdee"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "0028aa183cf6354d265fd483a9e4062a062d2d51d5b6d045c717564684fbadb10e761b228f37acc444c0"
+        },
+        {
+          "payload": "000f000015f9c845a9836c825d7015033d00050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "15f9c845a9836c825d7015033d"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "0028bf5b3513565825bde6fc30c703af04503523e289292414fb148c1d28edf21f22d34a2567029a451d"
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "pattern": "XX",
+      "dh": "25519",
+      "cipher": "ChaChaPoly",
+      "hash": "BLAKE2b",
+      "handshake_hash": "fe1b12645c8db87746ae55c6776baa570edcd888a83768f7825d4353487d3c01a2b90ea443db049d2ad771a28a369189e12eab27a852ab1453cfa62a19c5a3ed",
+      "messages": [
+        {
+          "payload": "",
+          "fields": null
+        },
+        {
+          "payload": "001a04007b6f776e65723a22626f62407365727665722e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22626f62407365727665722e636f6d227d"
+            }
+          ],
+          "packet": "007d059f971588c6fe932c8908d6925522542c13dd3c2d9b84286b228ee76903bb1b3a6813b26874d1a4d73ddcacc5716fc298f34bd1338ce9f9a4499a4fbee2366a07f4a6591c33cf66533dcd7f9067c3a029613336081168bd048de625206de89d0c9b2f4bf96404ab385d3f54891764df9828e19a87c03915abd25ffc2c"
+        },
+        {
+          "payload": "001c04007b6f776e65723a22616c69636540636c69656e742e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22616c69636540636c69656e742e636f6d227d"
+            }
+          ],
+          "packet": "005e96fc80bc903ada8b80d1652a9562d7cc9ec6c5c325e3d28b50fcba766fd1cdee0b91faf560fcc44eaa6e409720f0e0b4e8e1efdde2fc8f123fd016ebe79747c18dde32d74f970bad9ee5a0b87bdb799c66c0c40d0cb64abbcc75f5b2cf1b"
+        },
+        {
+          "payload": "000d00005a0910e060f91a0157cb96000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "5a0910e060f91a0157cb96"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "0028b6f0f2c9e748f542eba4f63625ef01dc255fa9a07b05f311387b2891677aa37243a81f7add2c9509"
+        },
+        {
+          "payload": "000f0000aba4ca74402807c5c1c4f3912d00050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "aba4ca74402807c5c1c4f3912d"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "002831889aa32491f67dfd425a729d1fe2ac63a915792441d3209652b3e480086cfe14f0698c52345378"
+        },
+        {
+          "payload": "000d000097a24735c5ff94becc5142000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "97a24735c5ff94becc5142"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "00285c80aa6468977dbfb7824e53444dffe539c8dddcdcf5886df94e5b7d3ba6cb7cd63d15823c9facc3"
+        },
+        {
+          "payload": "000f0000a9fc15910c6161921de5074a3a00050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "a9fc15910c6161921de5074a3a"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "00285374a61f9f2c2e16e2df4baed527cbe3a0445e8bbf5c56d06827288d48bf07eb9e406ac301733364"
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "pattern": "XX",
+      "dh": "25519",
+      "cipher": "ChaChaPoly",
+      "hash": "SHA512",
+      "handshake_hash": "beb140a34947eee5d0a289ae579360ba481b286af7eacda397cce44d78f3f2af82efe007af67f7e7228520e09f1890ac5c3f26e289d93cf4ed4ffbbaa465581f",
+      "messages": [
+        {
+          "payload": "",
+          "fields": null
+        },
+        {
+          "payload": "001a04007b6f776e65723a22626f62407365727665722e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22626f62407365727665722e636f6d227d"
+            }
+          ],
+          "packet": "007d069f971588c6fe932c8908d6925522542c13dd3c2d9b84286b228ee76903bb1b3a11a1b55456eacf471fead7aac2e614ac97a29d13621e9880bb7fc3de2b12442d62a9fc35cea091a99dbffe3ff23aa67c9367acc68b5d3fab46fcc65e23cb8d69d06ca4e79f1a357114ef63371affa976d475c22fd89dd4e5e15a89cf"
+        },
+        {
+          "payload": "001c04007b6f776e65723a22616c69636540636c69656e742e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22616c69636540636c69656e742e636f6d227d"
+            }
+          ],
+          "packet": "005e52c7780f48751543cccb4afa4dcc8fc35ff81f1058f0bceddb4702ccbded8a520bfe88b78a1dfdf9ec4980f7076bde01750757f6fb6f45beba3f3491c4a943f8b4ac19d15210d21e09a680e9610171c93f0ead8b523cc1469ee29216fd2c"
+        },
+        {
+          "payload": "000d0000cc22fb91a0d4cfc70f6195000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "cc22fb91a0d4cfc70f6195"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "0028fce4b41cb8e4fc5eab46fb2cf9dfb369f15c3748381c8cec4cf5ea94a2d2a57f60dfeefcaa5632fa"
+        },
+        {
+          "payload": "000f00005ae2f5c95dc9c629061c1cb77e00050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "5ae2f5c95dc9c629061c1cb77e"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "0028dd0ef266efb2ceb840ab1c36b083fb132457af1e078925d4dd9c58ee6dc2925290748269561a1c99"
+        },
+        {
+          "payload": "000d0000d76fa652e8eb653efce933000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "d76fa652e8eb653efce933"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "0028677fa684dbeea3f9f7cc27b7c50d61642a02693738458b776988293cee3717b77dac305f746ae26a"
+        },
+        {
+          "payload": "000f0000df8374f48c5f5f2bd1d0af1cb900050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "df8374f48c5f5f2bd1d0af1cb9"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "002866992731accf9fa330bda073e5f607be706e13f21ce27c3d3e77e003f9e3b146fd9510b264995a1c"
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "pattern": "XX",
+      "dh": "25519",
+      "cipher": "ChaChaPoly",
+      "hash": "BLAKE2s",
+      "handshake_hash": "254e1dde4c707fa11130981e288c3295fa05d50f926219e2c093d149ec3d065f",
+      "messages": [
+        {
+          "payload": "",
+          "fields": null
+        },
+        {
+          "payload": "001a04007b6f776e65723a22626f62407365727665722e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22626f62407365727665722e636f6d227d"
+            }
+          ],
+          "packet": "007d079f971588c6fe932c8908d6925522542c13dd3c2d9b84286b228ee76903bb1b3ad4e8d81765eee30028d58fdfb8940ab3baa77963349588fd2b1829a88f1b9f61ea7b69768bf6873b6fc4dea8b1f549da6f924d806d3fa61cd28bdbe381c8a8a4afaba94ace7548c24af97cca547a63239cdf49c636b2b30ad387b930"
+        },
+        {
+          "payload": "001c04007b6f776e65723a22616c69636540636c69656e742e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22616c69636540636c69656e742e636f6d227d"
+            }
+          ],
+          "packet": "005e03cd4aa011897bd4c138606ed1c9e8ce20667b88a4d4ae0adc702ec5474912264993e7fa6b73923ab200fb219ffb74058dd16617aa09abd42582ab7173d6ff8f0c7e2d4300d3a2442a388366474b24c425a2c4f011f9ea94cd7ec2cf9725"
+        },
+        {
+          "payload": "000d00006c21b5710d53a399265ace000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "6c21b5710d53a399265ace"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "00285c2fa1b9ff15c78d51019a149bbfe25e522aa94ec1cf72f82efd7d3985514d4725a261c23036f1cd"
+        },
+        {
+          "payload": "000f00003e86a7b7b41f1288bbace2013b00050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "3e86a7b7b41f1288bbace2013b"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "00287419563f08c9f43c1053544729d999f6131049cca4e5580fce8e0c7886e3e7e4220c8d4c8cd94d32"
+        },
+        {
+          "payload": "000d0000fa233a23857b5a4c32c7dd000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "fa233a23857b5a4c32c7dd"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "0028adebb18050dc277717e70d819b39d07bb68412c0f16cc093c4e9dca45af4489a10d66e7e4cb111cc"
+        },
+        {
+          "payload": "000f00009a8a104a59e6df15ded8d4a6e600050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "9a8a104a59e6df15ded8d4a6e6"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "00288e233881d990d1afc08425f50294f197cab2d0c5e387091ca33a2c7a911f04ecd8dd4ab28222e61d"
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "pattern": "IK",
+      "dh": "25519",
+      "cipher": "AESGCM",
+      "hash": "SHA256",
+      "handshake_hash": "8349776f04925ab666a298f37d692846d0a81ed1c35d0c49e96e4eac5390d2e3",
+      "messages": [
+        {
+          "payload": "001c04007b6f776e65723a22616c69636540636c69656e742e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22616c69636540636c69656e742e636f6d227d"
+            }
+          ]
+        },
+        {
+          "payload": "001a04007b6f776e65723a22626f62407365727665722e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22626f62407365727665722e636f6d227d"
+            }
+          ],
+          "packet": "004e08009f971588c6fe932c8908d6925522542c13dd3c2d9b84286b228ee76903bb1b3afd77e8b4d64ebf10f2cbe3f13308811b8c4df8d5aad0a69c57bf31041f5294cbf3de154e87adb5aa9cbe31f8"
+        },
+        {
+          "payload": "000d00006ac653fa143ada034b47bd000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "6ac653fa143ada034b47bd"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "0028f803d58746e50eead24c3f0d2e60a87c3990f8cf56bc5b0b8968dcf72cebc56bfb737a2ed747accd"
+        },
+        {
+          "payload": "000f0000530e80c06d8620154d0513376c00050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "530e80c06d8620154d0513376c"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "0028109f3207645d4b9f73bd8c6563b0cff225c2e2f6fb0d6585ef81354578e4b204c390f2d55c9a86bb"
+        },
+        {
+          "payload": "000d0000923828678c7aede4e9ee27000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "923828678c7aede4e9ee27"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "0028bc5b55ebdf8895f8af7015413c667682803b6ed4f248bebbb89aae927fc22266ffc9244da488ccb9"
+        },
+        {
+          "payload": "000f0000bff8149d26dd6c6fb4bcee583100050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "bff8149d26dd6c6fb4bcee5831"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "0028a6aa2713447b148dd56a3cee3b8a2566dcd77197c4677cdaca4537ba6e09d5981c28a688fae7a070"
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "pattern": "IK",
+      "dh": "25519",
+      "cipher": "AESGCM",
+      "hash": "BLAKE2b",
+      "handshake_hash": "4b49b6d316c652d33d9e65119ceea52e4eda593d5daebda36783a162c230ec5e33879297c1d014690dde0ea26c99b783ac8054c8aa2911f3b6c787e23671e308",
+      "messages": [
+        {
+          "payload": "001c04007b6f776e65723a22616c69636540636c69656e742e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22616c69636540636c69656e742e636f6d227d"
+            }
+          ]
+        },
+        {
+          "payload": "001a04007b6f776e65723a22626f62407365727665722e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22626f62407365727665722e636f6d227d"
+            }
+          ],
+          "packet": "004e09009f971588c6fe932c8908d6925522542c13dd3c2d9b84286b228ee76903bb1b3ae52307c1c61668c73feb8b69690d48feef806dee286e054fd55111116eba31b95fc8d84b466649d100c8c282"
+        },
+        {
+          "payload": "000d000058bb11f615a88bd120bcf2000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "58bb11f615a88bd120bcf2"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "0028ea5a819e627701bf1bec4fe0569cf6488f0b36be38840336de35c0a4a3807414d80852f0d70b83ae"
+        },
+        {
+          "payload": "000f0000c407a321f49950895d86772e7600050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "c407a321f49950895d86772e76"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "0028ecb94178714013600fab085f794e934a60d58bc1e335188f0657b316fea3ba7de0f60f610a0053f6"
+        },
+        {
+          "payload": "000d0000e184f895ba9e92b7a11350000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "e184f895ba9e92b7a11350"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "0028af90d441e11984551aeb909e749285bdd447ec9a513be16ae44108d348b8e0f63b8929c5c8dcd166"
+        },
+        {
+          "payload": "000f000068901b98c56ed6877780b7a89f00050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "68901b98c56ed6877780b7a89f"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "00282d5b8c5242115f5512ddf7995265fbc82defbd0c58fcf10805a767c62fb30b01d0ed08102671deb9"
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "pattern": "IK",
+      "dh": "25519",
+      "cipher": "AESGCM",
+      "hash": "SHA512",
+      "handshake_hash": "9c824d013a5f9700d0efc4b97ab90a7961e6e6873b9015d51426979a4fe7ae4322548aaff9e7227fce34bd953757588a4c574e99456cc1488281be748996e5d3",
+      "messages": [
+        {
+          "payload": "001c04007b6f776e65723a22616c69636540636c69656e742e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22616c69636540636c69656e742e636f6d227d"
+            }
+          ]
+        },
+        {
+          "payload": "001a04007b6f776e65723a22626f62407365727665722e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22626f62407365727665722e636f6d227d"
+            }
+          ],
+          "packet": "004e0a009f971588c6fe932c8908d6925522542c13dd3c2d9b84286b228ee76903bb1b3a3acd8f20d5a813c437bdcbb99ae858c60d9d7567828061d82cc5f37426a1b3a80e9bd6a5dd6b96bad4672e1c"
+        },
+        {
+          "payload": "000d00002bafd8aea2a64ef4665f7e000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "2bafd8aea2a64ef4665f7e"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "0028f81bed171791161e98ac040e97503bca91820c6a65ac000518954b63ed5c6a4fd18d77303dfb0f31"
+        },
+        {
+          "payload": "000f00007750bf08931ae40d70108fce0700050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "7750bf08931ae40d70108fce07"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "00285e17086a762a53ca825ddd50800c6e1bfeb72ed366683c282b73ad9dd654d6e9edc5a9b77580df4a"
+        },
+        {
+          "payload": "000d0000e18c21a37e55ecfad776e8000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "e18c21a37e55ecfad776e8"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "0028e7fb3d2134e12937da8baf7ffa8182343a0037e1f04d326ca275f2f0a649ce6d50dfed5cfcbfe9e6"
+        },
+        {
+          "payload": "000f0000b5a59ecb1ebe38a6c6381ecc5800050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "b5a59ecb1ebe38a6c6381ecc58"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "0028d158f352560d1df6515eac2549a7493704781b35ea76ef72bfe7e65e0303c3f69625b11cc45ba348"
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "pattern": "IK",
+      "dh": "25519",
+      "cipher": "AESGCM",
+      "hash": "BLAKE2s",
+      "handshake_hash": "9bd14ad530ffa5bee06e3de2a2e82add907863d9a21ab753ea0f0d8ea0f9f7fd",
+      "messages": [
+        {
+          "payload": "001c04007b6f776e65723a22616c69636540636c69656e742e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22616c69636540636c69656e742e636f6d227d"
+            }
+          ]
+        },
+        {
+          "payload": "001a04007b6f776e65723a22626f62407365727665722e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22626f62407365727665722e636f6d227d"
+            }
+          ],
+          "packet": "004e0b009f971588c6fe932c8908d6925522542c13dd3c2d9b84286b228ee76903bb1b3af68a70ca673daf8f07b919ecbf47c1d6b9ce1376ce2ab03d2f6ae7112fc2ea90aa1328b54e88cb3accab558c"
+        },
+        {
+          "payload": "000d000071d2b87b290539019524a7000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "71d2b87b290539019524a7"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "00288a1c9cc398eb5cbe4002a2299fe4a09598a178f1046a567fde8cfaf930dd5a518429ebc6515ffbac"
+        },
+        {
+          "payload": "000f00006754d027c241a892916848125b00050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "6754d027c241a892916848125b"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "002807dc5e496b307b94273c3cd29374d6487fc51b5f79d7cc9c9cdc2c8b1805f4a4365e5d22d8aa99d6"
+        },
+        {
+          "payload": "000d0000f21d991fb78ccdbfc607b5000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "f21d991fb78ccdbfc607b5"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "00289860fc4ab717d5e175e74ff165068d1fcce4e86b926e532c0e10f9abeba5f8870f40f7d6018d4bca"
+        },
+        {
+          "payload": "000f000001aa370b52ab9ade93d95b6cb300050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "01aa370b52ab9ade93d95b6cb3"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "002838cdf8034a930ffab6760c0f3b726ffb791555fd774d089693bb9c1f67edac8c419620d4f36ecdb5"
+        }
+      ]
+    },
+    {
+      "index": 12,
+      "pattern": "IK",
+      "dh": "25519",
+      "cipher": "ChaChaPoly",
+      "hash": "SHA256",
+      "handshake_hash": "57a8ae1540d2c434299ffcf85fbbc036da0ceac1eee9a45cc39c91d3224c33db",
+      "messages": [
+        {
+          "payload": "001c04007b6f776e65723a22616c69636540636c69656e742e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22616c69636540636c69656e742e636f6d227d"
+            }
+          ]
+        },
+        {
+          "payload": "001a04007b6f776e65723a22626f62407365727665722e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22626f62407365727665722e636f6d227d"
+            }
+          ],
+          "packet": "004e0c009f971588c6fe932c8908d6925522542c13dd3c2d9b84286b228ee76903bb1b3a0fb442a67d9e947a36bcbf1a4f8731a901d2d634c9b53aabcbde593468fefdf9e2c305ff8d3d268305f62aa4"
+        },
+        {
+          "payload": "000d0000af894ce738036893737808000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "af894ce738036893737808"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "0028ff93a6d062ac6598f4a2ba207fb98bcac5b5709c2894e64116f368f0f52ce1c4919cd45aea3c10be"
+        },
+        {
+          "payload": "000f0000d8b9c301fb2a3d53d6ae5fed4c00050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "d8b9c301fb2a3d53d6ae5fed4c"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "0028c9ceaa96a034ad17d6532be50f250866b06dd543c2cbeab19651fcbc8363caf731d9b3857298243c"
+        },
+        {
+          "payload": "000d00009b315bf437f0686ee417be000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "9b315bf437f0686ee417be"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "00281bc4b2caa55861050b82afabe94fa4cb0527cd65ccbdfbd19935f8cd9775d3c96b1a039b57d82475"
+        },
+        {
+          "payload": "000f000043ff589baf2aec53ea9387a6bd00050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "43ff589baf2aec53ea9387a6bd"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "0028d694e5931b86e1748490d602cb058d36a212231ee02ee0eb39cae5ed4f82b3d828ea9947fa0caee6"
+        }
+      ]
+    },
+    {
+      "index": 13,
+      "pattern": "IK",
+      "dh": "25519",
+      "cipher": "ChaChaPoly",
+      "hash": "BLAKE2b",
+      "handshake_hash": "247a00d5abfc8eef0221a5827a1303b9a0b607cbee46625ec33c27ae2ce2267cafe6bb4b6ddd12bf7613d71b9b23ac27a33d101f4c4891ecbc94dc55cfac2d2c",
+      "messages": [
+        {
+          "payload": "001c04007b6f776e65723a22616c69636540636c69656e742e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22616c69636540636c69656e742e636f6d227d"
+            }
+          ]
+        },
+        {
+          "payload": "001a04007b6f776e65723a22626f62407365727665722e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22626f62407365727665722e636f6d227d"
+            }
+          ],
+          "packet": "004e0d009f971588c6fe932c8908d6925522542c13dd3c2d9b84286b228ee76903bb1b3a58188a7096405cf5eb5dac32b9379ec2639759b6e4507dc4b8b7fc9642ccbee0b59f883f6c175ac7aef0b373"
+        },
+        {
+          "payload": "000d00006041e1b66fe6e2c1b0db3f000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "6041e1b66fe6e2c1b0db3f"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "00282cb830a71afe5a2f263ffef39caff9c548f6061f7befce77f5f6ce20b572f7db0a59a3fe9b3d690e"
+        },
+        {
+          "payload": "000f0000a81c12cc2e0b9af0befddc1f0200050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "a81c12cc2e0b9af0befddc1f02"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "0028cbfb61a74df05d85cda828be4a9888ca696fa885adb3bad2f34860f1c29f80abc5c76f5a6a3bdcb3"
+        },
+        {
+          "payload": "000d00005f2eb1ae38cf0ede0903ed000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "5f2eb1ae38cf0ede0903ed"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "0028d7ba7a3a1dd6a6ab2122cd6b7b173cdb073700f689500f32e767cad7adcd3591537a8dcd02fb17b7"
+        },
+        {
+          "payload": "000f000074d10fd868a4069f8c769d860300050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "74d10fd868a4069f8c769d8603"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "002857c8db9d127af322f663fc6a3bd4efb4c7ceba6c37dc199026e237b81b05c9dc9a0abc6a02f00ff1"
+        }
+      ]
+    },
+    {
+      "index": 14,
+      "pattern": "IK",
+      "dh": "25519",
+      "cipher": "ChaChaPoly",
+      "hash": "SHA512",
+      "handshake_hash": "6d8e64261eebb61ed3a9ec48069646b6eeacc87ea80a68d0d4fa15737e076db8cde8573473686db3d65ae6b491a66ccab365a7f5fb96c17bdc8ce360ab9f63ea",
+      "messages": [
+        {
+          "payload": "001c04007b6f776e65723a22616c69636540636c69656e742e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22616c69636540636c69656e742e636f6d227d"
+            }
+          ]
+        },
+        {
+          "payload": "001a04007b6f776e65723a22626f62407365727665722e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22626f62407365727665722e636f6d227d"
+            }
+          ],
+          "packet": "004e0e009f971588c6fe932c8908d6925522542c13dd3c2d9b84286b228ee76903bb1b3adbd468df655765001bfa1d3d16b4b2197ebe7c48f7f94ed55209e31d8e9236625b67bc8ca0bc65a4df512c9c"
+        },
+        {
+          "payload": "000d0000a69ff8e92b5992df472075000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "a69ff8e92b5992df472075"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "00285420dec3203fb70a7c1268fb1ab49f702d7482647d438679f9d70e057195251fee3bbf01609ea71e"
+        },
+        {
+          "payload": "000f0000e6cb2377ceb58b57b75e6f61fa00050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "e6cb2377ceb58b57b75e6f61fa"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "002853cc59e5aeee8071502d85f7d48dbefed131f9a7bc8251221313589e5655a65963b7a869b9286477"
+        },
+        {
+          "payload": "000d0000e375925a7c3a71c010dff8000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "e375925a7c3a71c010dff8"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "002898323d665b13b5a0832b28bce63d21fc7f5f77b52b77283db84e52ba9ebf5691ea1ee48c6a3373ea"
+        },
+        {
+          "payload": "000f0000e4d1464865741cbbd9f3cc2ba400050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "e4d1464865741cbbd9f3cc2ba4"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "00287efeadf2ef04ea59529b545fb46dd79f7769a1151ece17cbce2dcbd4bfb34dda2311b04af5660b54"
+        }
+      ]
+    },
+    {
+      "index": 15,
+      "pattern": "IK",
+      "dh": "25519",
+      "cipher": "ChaChaPoly",
+      "hash": "BLAKE2s",
+      "handshake_hash": "19957cd9e67ac292451304209d6afbc8d289eb0672f62ed29deff66d24baad65",
+      "messages": [
+        {
+          "payload": "001c04007b6f776e65723a22616c69636540636c69656e742e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22616c69636540636c69656e742e636f6d227d"
+            }
+          ]
+        },
+        {
+          "payload": "001a04007b6f776e65723a22626f62407365727665722e636f6d227d",
+          "fields": [
+            {
+              "Type": 1024,
+              "Data": "7b6f776e65723a22626f62407365727665722e636f6d227d"
+            }
+          ],
+          "packet": "004e0f009f971588c6fe932c8908d6925522542c13dd3c2d9b84286b228ee76903bb1b3a63524ea203d6dc8557b952377eb5336b92308f6d988a8eae82105308f0784cd051e778207ad57d0218481ed2"
+        },
+        {
+          "payload": "000d000086d983f8f658dd630762f2000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "86d983f8f658dd630762f2"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "0028f86095fca86d8e37d44e3bc72e158d1aa0dd5be3574b2e7013b6e77d5a71ddd70e4abb017d7a30b9"
+        },
+        {
+          "payload": "000f0000073c6ca378542e46c9c2e1bebd00050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "073c6ca378542e46c9c2e1bebd"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "00288e4878ab54bca3a295f383899fce6679d40a4dfdfd6632309dce5b16aa5516fdb561929b47d00b4c"
+        },
+        {
+          "payload": "000d0000df86afb528743cf0584388000700010000000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "df86afb528743cf0584388"
+            },
+            {
+              "Type": 1,
+              "Data": "0000000000"
+            }
+          ],
+          "packet": "00284da08c00c7d9679c18c5fb1d9854f47eb9ead743bafb7b51bff70f9942fc5c8f3d844b2554e44936"
+        },
+        {
+          "payload": "000f0000b360fc378274dbc8cd2ebe53da00050001000000",
+          "fields": [
+            {
+              "Type": 0,
+              "Data": "b360fc378274dbc8cd2ebe53da"
+            },
+            {
+              "Type": 1,
+              "Data": "000000"
+            }
+          ],
+          "packet": "00284ee6b62acb2047caf41d5a041a535298da0bb4ad22d776fed30e4b320f37e4e9cf933d45c9f4f6c9"
+        }
+      ]
+    }
+  ]
+}Processfinishedwithexitcode0
