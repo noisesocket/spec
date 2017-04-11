@@ -133,3 +133,15 @@ This format is also used in handshake message payloads if the payload size is no
  <summary>An example of prologue would be: (expand to view in HEX) </summary>
 101c4e6f6973655f58585f32353531395f41455347434d5f5348413235361d4e6f6973655f58585f32353531395f41455347434d5f424c414b4532621c4e6f6973655f58585f32353531395f41455347434d5f5348413531321d4e6f6973655f58585f32353531395f41455347434d5f424c414b453273204e6f6973655f58585f32353531395f436861436861506f6c795f534841323536214e6f6973655f58585f32353531395f436861436861506f6c795f424c414b453262204e6f6973655f58585f32353531395f436861436861506f6c795f534841353132214e6f6973655f58585f32353531395f436861436861506f6c795f424c414b4532731c4e6f6973655f494b5f32353531395f41455347434d5f5348413235361d4e6f6973655f494b5f32353531395f41455347434d5f424c414b4532621c4e6f6973655f494b5f32353531395f41455347434d5f5348413531321d4e6f6973655f494b5f32353531395f41455347434d5f424c414b453273204e6f6973655f494b5f32353531395f436861436861506f6c795f534841323536214e6f6973655f494b5f32353531395f436861436861506f6c795f424c414b453262204e6f6973655f494b5f32353531395f436861436861506f6c795f534841353132214e6f6973655f494b5f32353531395f436861436861506f6c795f424c414b453273
 </details>
+
+**Test vectors**
+------------------
+
+Initial message is moved to the root to reduce the file size. It contains 16 sub-messages each correspond to a specific Noise protocol. The order of protocols can be seen in [Protocols] array.
+
+"Server" chooses which sub-message to answer and this forms a session. 
+Each session contains an array of transport messages which consist of raw wire data ("Packet" field), payload and fields
+
+"Payload" is the representation of Noise socket fields in the order they appear in nonempty payload. It may or may not be present during handshake (1st XX message has always an empty payload).
+
+Nonempty payload contains 1 or more fields. There's one field during handshake (dummy type 1024) and two (0 - data and 1 - padding) for transport messages.
