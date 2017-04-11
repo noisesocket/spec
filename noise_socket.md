@@ -72,6 +72,7 @@ In the **Second handshake message** server responds to client with the following
 Noise [prologue](http://noiseprotocol.org/noise.html#prologue) is calculated as follows:
 - 1 byte number of message types (N)
 - N times:
+
   -- 1 byte message type length (L)
   -- L bytes message type (Noise protocol string)
 
