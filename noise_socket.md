@@ -49,21 +49,21 @@ The handshake process consists of set of messages which client and server send t
 
 **4.1. First handshake message** 
 ---------------------------
-In the **First handshake message** client offers server a set of sub-messages, each of which corresponds to a concrete [Noise protocol](http://noiseprotocol.org/noise.html#protocol-names)
+In the **First handshake message** client offers server a set of sub-messages, identified by a string name. For example, [Noise protocol](http://noiseprotocol.org/noise.html#protocol-names).
 
 Each handshake sub-message contains following fields:
    - 1 byte length of the following string, indicating the ciphersuite/protocol used, i.e. message type
-   -  String indicating message type
-   - 2 bytes big-endian length of following Noise message 
-   - **Noise message**
+   - String indicating message type
+   - 2 bytes big-endian length of following sub-message 
+   - **Sub message**
 
-**Noise message** is received by calling **WriteMessage** on the corresponding [HandshakeState](http://noiseprotocol.org/noise.html#the-handshakestate-object)
+When using Noise, **Sub message** is received by calling **WriteMessage** on the corresponding [HandshakeState](http://noiseprotocol.org/noise.html#the-handshakestate-object)
 
 **4.2. Second handshake message**
 ------------------------- 
 In the **Second handshake message** server responds to client with the following structure:
-- 1 byte sub-message index server responds to
 
+- 1 byte sub-message index server responds to
 - Handshake message
 
 
@@ -75,19 +75,15 @@ Noise [prologue](http://noiseprotocol.org/noise.html#prologue) is calculated as 
   -- 1 byte message type length (L)
   -- L bytes message type (Noise protocol string)
 
-**6. Handshake payload protection**
----------------------
- If you send any handshake data in the first XX message, it will be sent unencrypted and unauthenticated.
- Certificates must be sent together with the static keys (**s** token) for the receiving side to perform validation
+An example of such prologue could be found in Appendix
 
- 
-**7. Data packets**
+**6. Data packets**
 ---------------------
 
 After handshake is complete and both [Cipher states](http://noiseprotocol.org/noise.html#the-cipherstate-object) are created, all following packets must be encrypted using those cipherstates.
 
 
-**8. Payload fields**
+**7. Payload fields**
 ---------------------------
 Each encrypted handshake payload as well as every encrypted transport message consists of 1 or more fields.
 Every field has the following structure:
@@ -127,6 +123,6 @@ This format is also used in handshake message payloads if the payload size is no
 **Appendix**
 ------------------
 <details> 
- <summary>An example of Prologue would be: (expand to view in HEX) </summary>
+ <summary>An example of prologue would be: (expand to view in HEX) </summary>
 101c4e6f6973655f58585f32353531395f41455347434d5f5348413235361d4e6f6973655f58585f32353531395f41455347434d5f424c414b4532621c4e6f6973655f58585f32353531395f41455347434d5f5348413531321d4e6f6973655f58585f32353531395f41455347434d5f424c414b453273204e6f6973655f58585f32353531395f436861436861506f6c795f534841323536214e6f6973655f58585f32353531395f436861436861506f6c795f424c414b453262204e6f6973655f58585f32353531395f436861436861506f6c795f534841353132214e6f6973655f58585f32353531395f436861436861506f6c795f424c414b4532731c4e6f6973655f494b5f32353531395f41455347434d5f5348413235361d4e6f6973655f494b5f32353531395f41455347434d5f424c414b4532621c4e6f6973655f494b5f32353531395f41455347434d5f5348413531321d4e6f6973655f494b5f32353531395f41455347434d5f424c414b453273204e6f6973655f494b5f32353531395f436861436861506f6c795f534841323536214e6f6973655f494b5f32353531395f436861436861506f6c795f424c414b453262204e6f6973655f494b5f32353531395f436861436861506f6c795f534841353132214e6f6973655f494b5f32353531395f436861436861506f6c795f424c414b453273
 </details>
