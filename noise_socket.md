@@ -37,8 +37,8 @@ All sizes are in big endian form.
 
 Both handshake and transport packets have the following structure:
 
-- 2 bytes packet size 
-- Data
+* 2 bytes packet size 
+* Data
 
 
 **4. Handshake packets**
@@ -52,19 +52,18 @@ The handshake process consists of set of messages which client and server send t
 In the **First handshake message** client offers server a set of sub-messages, identified by a string name. For example, [Noise protocol](http://noiseprotocol.org/noise.html#protocol-names).
 
 Each handshake sub-message contains following fields:
-   - 1 byte length of the following string, indicating the ciphersuite/protocol used, i.e. message type
-   - String indicating message type
-   - 2 bytes big-endian length of following sub-message 
-   - **Sub message**
+   * 1 byte length of the following string, indicating the ciphersuite/protocol used, i.e. message type
+   * String indicating message type
+   * 2 bytes big-endian length of following sub-message 
+   * **Sub message**
 
 When using Noise, **Sub message** is received by calling **WriteMessage** on the corresponding [HandshakeState](http://noiseprotocol.org/noise.html#the-handshakestate-object)
 
 **4.2. Second handshake message**
 ------------------------- 
 In the **Second handshake message** server responds to client with the following structure:
-
-- 1 byte sub-message index server responds to
-- Handshake message
+* 1 byte sub-message index server responds to
+* Handshake message
 
 
 **5. Prologue**
@@ -72,8 +71,8 @@ In the **Second handshake message** server responds to client with the following
 Noise [prologue](http://noiseprotocol.org/noise.html#prologue) is calculated as follows:
 * 1 byte number of message types (N)
 * N times:
-  * 1 byte message type length (L)
-  * L bytes message type (Noise protocol string)
+  * 1 byte message type length
+  * Message type (ex. Noise protocol string)
 
 An example of such prologue could be found in Appendix
 
