@@ -7,4 +7,4 @@ Description is stored in [noise_socket.md](noise_socket.md) as Pandoc Markdown.
 Implementations
 ---------------
 
-[Go](https://github.com/go-noisesocket/noisesocket/)
+[Go](https://github.com/go-noisesocket/noisesocket/) supports XX, IK, Padding, Packet size negotiation
