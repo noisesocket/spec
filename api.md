@@ -26,7 +26,7 @@
 
  * **`ComposeInitiatorHandshakeMessages(s, data, protocols)`** takes client's static key `s`, optional payload `data` and a list of protocols, same that was used for caling `CalculatePrologue`
  	Variables
- 		* **`result_buffer`** - buffer, containing the byte sequence that needs to be sent by wire
+ 		* **`result_buffer`** - buffer, containing the resulting byte sequence
  		* **`message_buffer`** - temporary buffer to hold the result of calling `WriteMessage` on the current `handshake_state`
  		* **`handshake_states`** - an array of all instances of `HandshakeState` objects, created during this method
 
@@ -73,5 +73,16 @@
  		* `payload`
 
 
+ * **`ComposeServerResponseMessage(handshake_state, index, data)`** receives `handshake_state`, `index` and optional `data` to send to client
+
+ 	Variables
+ 		* **`result_buffer`** - buffer, containing the resulting byte sequence
 
 
+ 	* Writes `index` to `result_buffer`
+ 	* Calls WriteMessage(result_buffer, data) on handshake_state
+
+ 	Returns:
+ 		`result_buffer`
+   
+   
