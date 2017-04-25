@@ -1,7 +1,8 @@
 
 
 5. API
-===================
+=======
+
  * **`ReadString(buffer)`**  reads 1 byte `len` of the following string from `buffer` and then `len` bytes string itself. Advances read position to `len + 1`
 
  * **`WriteString(string, buffer)`** writes 1 byte `len` of the following string to `buffer` and then string itself.
@@ -11,8 +12,9 @@
  * **`WriteData(data, buffer)`** writes 2 bytes `len` of the following data to `buffer` and then the data itself.
 
  * **`CalculatePrologue(protocols)`** takes a list of protocol names in the order they will be used in the handshake.
- 	Variables:
- 		* **`prologue_buffer`** - a byte buffer to write to
+ 
+ 	* Variables:
+ 	* **`prologue_buffer`** - a byte buffer to write to
 
  	* Writes 1 byte number of protocols `N` to `prologue_buffer`
  	* Does `N` times:
