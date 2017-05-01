@@ -1,0 +1,1 @@
+c:\pandoc\pandoc noisesocket.md -s --toc -f markdown --template template_pandoc.html --css=spec_markdown.css --filter pandoc-citeproc --bibliography=my.bib -o output\noisesocket.html
