@@ -71,10 +71,9 @@
 </ul></li>
 <li><a href="#prologue-1">3. Prologue</a></li>
 <li><a href="#data-packets">4. Data packets</a></li>
-<li><a href="#appendix">5. Appendix</a></li>
-<li><a href="#test-vectors">6. Test vectors</a></li>
-<li><a href="#ipr">7. IPR</a></li>
-<li><a href="#references">8. References</a></li>
+<li><a href="#test-vectors">5. Test vectors</a></li>
+<li><a href="#ipr">6. IPR</a></li>
+<li><a href="#references">7. References</a></li>
 </ul>
 </div>
 <h1 id="abstract"><strong>Abstract</strong></h1>
@@ -967,6 +966,7 @@ Noise_XXfallback(e, s, rs):
 <li>Explicit nonces increase message size.</li>
 <li>Explicit nonces make it easier to &quot;backdoor&quot; crypto implementations, e.g. by modifying the RNG so that key recovery data is leaked through the nonce fields.</li>
 </ul>
+
 <h1 id="noisesocket-protocol"><strong>NoiseSocket protocol</strong></h1>
 <p>NoiseSocket describes how to compose and parse handshake and transport messages, do versioning and negotiation. There is only one mandatory pattern that must be present in any first handshake message: <a href="#interactive-patterns">Noise_XX</a>. Noise_XX allows any combination of authentications (client, server, mutual, none).</p>
 <p>Other patterns may be supported by concrete implementations, but at least one Noise_XX message must be included first in any first message</p>
@@ -1009,17 +1009,15 @@ Noise_XXfallback(e, s, rs):
 <p>An example of such prologue could be found in Appendix</p>
 <h1 id="data-packets">4. Data packets</h1>
 <p>After handshake is complete and both <a href="#the-cipherstate-object">Cipher states</a> are created, all following packets must be encrypted using those cipherstates.</p>
-<h1 id="appendix">5. Appendix</h1>
-<p><details> <summary>An example prologue: (expand to view in HEX) </summary> 101c4e6f6973655f58585f32353531395f41455347434d5f5348413235361d4e6f6973655f58585f32353531395f41455347434d5f424c414b4532621c4e6f6973655f58585f32353531395f41455347434d5f5348413531321d4e6f6973655f58585f32353531395f41455347434d5f424c414b453273204e6f6973655f58585f32353531395f436861436861506f6c795f534841323536214e6f6973655f58585f32353531395f436861436861506f6c795f424c414b453262204e6f6973655f58585f32353531395f436861436861506f6c795f534841353132214e6f6973655f58585f32353531395f436861436861506f6c795f424c414b4532731c4e6f6973655f494b5f32353531395f41455347434d5f5348413235361d4e6f6973655f494b5f32353531395f41455347434d5f424c414b4532621c4e6f6973655f494b5f32353531395f41455347434d5f5348413531321d4e6f6973655f494b5f32353531395f41455347434d5f424c414b453273204e6f6973655f494b5f32353531395f436861436861506f6c795f534841323536214e6f6973655f494b5f32353531395f436861436861506f6c795f424c414b453262204e6f6973655f494b5f32353531395f436861436861506f6c795f534841353132214e6f6973655f494b5f32353531395f436861436861506f6c795f424c414b453273 </details></p>
-<h1 id="test-vectors">6. Test vectors</h1>
+<h1 id="test-vectors">5. Test vectors</h1>
 <p>Initial message is moved to the root to reduce the file size. It contains 16 sub-messages each correspond to a specific Noise protocol. The order of protocols can be seen in [Protocols] array.</p>
 <p>&quot;Server&quot; chooses which sub-message to answer and this forms a session. Each session contains an array of transport messages which consist of raw wire data (&quot;Packet&quot; field), payload and fields</p>
 <p>&quot;Payload&quot; is the representation of NoiseSocket fields in the order they appear in nonempty message payload. It may or may not be present during handshake (1st XX message has always an empty payload).</p>
 <p>Nonempty payload contains 1 or more fields. There's one field during handshake (dummy type 1024) and two (0 - data and 1 - padding) for transport messages.</p>
-<h1 id="ipr">7. IPR</h1>
+<h1 id="ipr">6. IPR</h1>
 <p>The NoiseSocket specification (this document) is hereby placed in the public domain.</p>
 
-<h1 id="references" class="unnumbered">8. References</h1>
+<h1 id="references" class="unnumbered">7. References</h1>
 <div id="refs" class="references">
 <div id="ref-elligator">
 <p>Bernstein, Daniel J., Mike Hamburg, Anna Krasnova, and Tanja Lange. 2013. “Elligator: Elliptic-curve points indistinguishable from uniform random strings.” Cryptology ePrint Archive, Report 2013/325. <a href="http://eprint.iacr.org/2013/325" class="uri">http://eprint.iacr.org/2013/325</a>.</p>

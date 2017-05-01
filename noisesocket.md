@@ -1585,11 +1585,11 @@ Explicit random nonces (like TLS "Random" fields) are not used because:
   * Explicit nonces increase message size.
   * Explicit nonces make it easier to "backdoor" crypto implementations, e.g. by modifying the RNG so that key recovery data is leaked through the nonce fields.
 
-
-
+\pagebreak
 
 **NoiseSocket protocol**
 ========================
+
 NoiseSocket describes how to compose and parse handshake and transport messages, do versioning and negotiation.
 There is only one mandatory pattern that must be present in any first handshake message: [Noise_XX](#interactive-patterns).
 Noise_XX allows any combination of authentications (client, server, mutual, none).
@@ -1653,14 +1653,7 @@ An example of such prologue could be found in Appendix
 After handshake is complete and both [Cipher states](#the-cipherstate-object) are created, all following packets must be encrypted using those cipherstates.
 
 
-5. Appendix
-================
-<details> 
- <summary>An example prologue: (expand to view in HEX) </summary>
-101c4e6f6973655f58585f32353531395f41455347434d5f5348413235361d4e6f6973655f58585f32353531395f41455347434d5f424c414b4532621c4e6f6973655f58585f32353531395f41455347434d5f5348413531321d4e6f6973655f58585f32353531395f41455347434d5f424c414b453273204e6f6973655f58585f32353531395f436861436861506f6c795f534841323536214e6f6973655f58585f32353531395f436861436861506f6c795f424c414b453262204e6f6973655f58585f32353531395f436861436861506f6c795f534841353132214e6f6973655f58585f32353531395f436861436861506f6c795f424c414b4532731c4e6f6973655f494b5f32353531395f41455347434d5f5348413235361d4e6f6973655f494b5f32353531395f41455347434d5f424c414b4532621c4e6f6973655f494b5f32353531395f41455347434d5f5348413531321d4e6f6973655f494b5f32353531395f41455347434d5f424c414b453273204e6f6973655f494b5f32353531395f436861436861506f6c795f534841323536214e6f6973655f494b5f32353531395f436861436861506f6c795f424c414b453262204e6f6973655f494b5f32353531395f436861436861506f6c795f534841353132214e6f6973655f494b5f32353531395f436861436861506f6c795f424c414b453273
-</details>
-
-6. Test vectors
+5. Test vectors
 ===================
 
 Initial message is moved to the root to reduce the file size. It contains 16 sub-messages each correspond to a specific Noise protocol. The order of protocols can be seen in [Protocols] array.
@@ -1672,12 +1665,12 @@ Each session contains an array of transport messages which consist of raw wire d
 
 Nonempty payload contains 1 or more fields. There's one field during handshake (dummy type 1024) and two (0 - data and 1 - padding) for transport messages.
 
-7. IPR
+6. IPR
 ========
 
 The NoiseSocket specification (this document) is hereby placed in the public domain.
 
 \pagebreak
 
-8.  References
+7.  References
 ================
