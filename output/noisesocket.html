@@ -71,9 +71,10 @@
 </ul></li>
 <li><a href="#prologue-1">3. Prologue</a></li>
 <li><a href="#data-packets">4. Data packets</a></li>
-<li><a href="#test-vectors">5. Test vectors</a></li>
-<li><a href="#ipr">6. IPR</a></li>
-<li><a href="#references">7. References</a></li>
+<li><a href="#api">5. API</a></li>
+<li><a href="#test-vectors">6. Test vectors</a></li>
+<li><a href="#ipr">7. IPR</a></li>
+<li><a href="#references">8. References</a></li>
 </ul>
 </div>
 <h1 id="abstract"><strong>Abstract</strong></h1>
@@ -1009,15 +1010,112 @@ Noise_XXfallback(e, s, rs):
 <p>An example of such prologue could be found in Appendix</p>
 <h1 id="data-packets">4. Data packets</h1>
 <p>After handshake is complete and both <a href="#the-cipherstate-object">Cipher states</a> are created, all following packets must be encrypted using those cipherstates.</p>
-<h1 id="test-vectors">5. Test vectors</h1>
-<p>Initial message is moved to the root to reduce the file size. It contains 16 sub-messages each correspond to a specific Noise protocol. The order of protocols can be seen in [Protocols] array.</p>
-<p>&quot;Server&quot; chooses which sub-message to answer and this forms a session. Each session contains an array of transport messages which consist of raw wire data (&quot;Packet&quot; field), payload and fields</p>
-<p>&quot;Payload&quot; is the representation of NoiseSocket fields in the order they appear in nonempty message payload. It may or may not be present during handshake (1st XX message has always an empty payload).</p>
-<p>Nonempty payload contains 1 or more fields. There's one field during handshake (dummy type 1024) and two (0 - data and 1 - padding) for transport messages.</p>
-<h1 id="ipr">6. IPR</h1>
+<h1 id="api">5. API</h1>
+<p>We present a set of methods which will help to implement NoiseSocket flow</p>
+<ul>
+<li><p><strong><code>ReadString(buffer)</code></strong> reads 1 byte <code>len</code> of the following string from <code>buffer</code> and then <code>len</code> bytes string itself. Advances read position to <code>len + 1</code></p></li>
+<li><p><strong><code>WriteString(string, buffer)</code></strong> writes 1 byte <code>len</code> of the following string to <code>buffer</code> and then string itself.</p></li>
+<li><p><strong><code>ReadData(buffer)</code></strong> reads 2 byte <code>len</code> of the following data from <code>buffer</code> and then <code>len</code> bytes of data. Advances position to <code>len + 2</code></p></li>
+<li><p><strong><code>WriteData(data, buffer)</code></strong> writes 2 bytes <code>len</code> of the following data to <code>buffer</code> and then the data itself.</p></li>
+<li><p><strong><code>CalculatePrologue(protocols)</code></strong> takes a list of protocol names in the order they will be used in the handshake.</p>
+Variables:
+<ul>
+<li><strong><code>prologue_buffer</code></strong> - a byte buffer to write to</li>
+</ul>
+<p>Algorithm:</p>
+<ul>
+<li>Writes 1 byte number of protocols <code>N</code> to <code>prologue_buffer</code></li>
+<li>Does <code>N</code> times:
+<ul>
+<li>Takes the next <code>protocol_name</code> from <code>protocols</code></li>
+<li>Calls <code>WriteString(protocol_name, prologue_buffer)</code></li>
+</ul></li>
+</ul>
+Returns:
+<ul>
+<li><code>prologue_buffer</code></li>
+</ul></li>
+<li><strong><code>ComposeInitiatorHandshakeMessages(s, data, protocols)</code></strong> takes client's static key <code>s</code>, optional payload <code>data</code> and a list of protocols, same that was used for caling <code>CalculatePrologue</code> Variables:
+<ul>
+<li><strong><code>result_buffer</code></strong> - buffer, containing the resulting byte sequence</li>
+<li><strong><code>message_buffer</code></strong> - temporary buffer to hold the result of calling <code>WriteMessage</code> on the current <code>handshake_state</code></li>
+<li><strong><code>handshake_states</code></strong> - an array of all instances of <code>HandshakeState</code> objects, created during this method</li>
+</ul>
+<p>Algorithm:</p>
+<ul>
+<li>Calls <code>CalculatePrologue(protocols)</code> to receive <code>prologue</code></li>
+<li>Writes the 1 byte number of protocols <code>N</code> to <code>result_buffer</code></li>
+<li>Does <code>N</code> times
+<ul>
+<li>Takes the next <code>protocol</code> from <code>protocols</code></li>
+<li>Calls <code>WriteString(protocol_name, result_buffer)</code></li>
+<li>Calls <code>GENERATE_KEYPAIR()</code> to generate new <code>e</code></li>
+<li>Initializes new <code>HandshakeState</code> instance with <code>DH functions</code>, <code>Cipher functions</code> and <code>Hash functions</code>, described in <code>protocol</code> and also <code>s</code>, <code>e</code> and <code>prologue</code> to receive <code>handshake_state</code></li>
+<li>initializes new <code>message_buffer</code></li>
+<li>Calls <code>WriteMessage(data, message_buffer)</code> on <code>handshake_state</code></li>
+<li>Calls <code>WriteData(message_buffer, result_buffer)</code></li>
+<li>Adds <code>handshake_state</code> to <code>handshake_states</code></li>
+</ul></li>
+</ul>
+Returns:
+<ul>
+<li><code>result_buffer</code></li>
+<li><code>handshake_states</code></li>
+</ul></li>
+<li><strong><code>ParseFirstMessage(message, s)</code></strong> receives <code>message</code>, created by calling <code>ComposeInitiatorHandshakeMessages</code> and static keypair <code>s</code> Variables:
+<ul>
+<li><strong><code>protocols</code></strong> - a list of protocol names, parsed from <code>message</code></li>
+<li><strong><code>sub_messages</code></strong> - a list of byte sequences in order they were written to <code>message</code> by calling <code>WriteMessage</code></li>
+<li><strong><code>handshake_state</code></strong> - a state that was created when server chose one of the incoming messages</li>
+<li><strong><code>message_index</code></strong> - an index of the message that server chose</li>
+<li><strong><code>payload</code></strong> - an optional payload, provided in the first message</li>
+</ul>
+Algorithm:
+<ul>
+<li>Reads 1 byte number of sub-messages <code>N</code></li>
+<li>Does <code>N</code> times:
+<ul>
+<li>Calls <code>ReadString(message)</code> to receive <code>protocol_name</code></li>
+<li>Calls <code>ReadData(message)</code> to receive <code>sub_message</code></li>
+<li>Appends <code>protocol_name</code> to <code>protocols</code></li>
+<li>Appends <code>sub_message</code> to <code>sub_messages</code></li>
+</ul></li>
+<li>Calls <code>CalculatePrologue(protocols)</code> to receive <code>prologue</code></li>
+<li>Chooses a protocol, according to server protocol priority and the corresponding <code>sub_message</code> from <code>sub_messages</code>.</li>
+<li>Writes index of the chosen <code>protocol</code> to <code>message_index</code></li>
+<li>Calls <code>GENERATE_KEYPAIR()</code> to generate new <code>e</code></li>
+<li>Initializes new <code>HandshakeState</code> instance with <code>DH functions</code>, <code>Cipher functions</code> and <code>Hash functions</code>, described in <code>protocol</code> and also <code>s</code>, <code>e</code> and <code>prologue</code> to receive <code>handshake_state</code></li>
+<li>Calls <code>ReadMessage(sub_messages)</code> on <code>handshake_state</code> to receive an optional <code>payload</code></li>
+</ul>
+Returns:
+<ul>
+<li><code>message_index</code></li>
+<li><code>handshake_state</code></li>
+<li><code>payload</code></li>
+</ul></li>
+<li><p><strong><code>ComposeServerResponseMessage(handshake_state, index, data)</code></strong> receives <code>handshake_state</code>, <code>index</code> and optional <code>data</code> to send to client</p>
+Variables:
+<ul>
+<li><strong><code>result_buffer</code></strong> - buffer, containing the resulting byte sequence</li>
+</ul>
+<p>Algorithm:</p>
+<ul>
+<li>Writes <code>index</code> to <code>result_buffer</code></li>
+<li>Calls WriteMessage(result_buffer, data) on handshake_state</li>
+</ul>
+Returns:
+<ul>
+<li><code>result_buffer</code></li>
+</ul></li>
+</ul>
+<h1 id="test-vectors">6. Test vectors</h1>
+<p>Test vectors consist of one <a href="#first-handshake-message">initial message</a>, <a href="#prologue">prologue</a> and a set of private keys. Two for initiator (static, ephemeral) and two for responder.</p>
+<p>Initial message contains 16 sub-messages each correspond to a specific Noise protocol. The order of protocols can be seen in <code>Protocols</code> array.</p>
+<p>&quot;Server&quot; chooses which sub-message to answer and this forms a <code>session</code>. Each session contains an array of transport messages which consist of raw wire data (&quot;Packet&quot; field), and payload</p>
+<h1 id="ipr">7. IPR</h1>
 <p>The NoiseSocket specification (this document) is hereby placed in the public domain.</p>
 
-<h1 id="references" class="unnumbered">7. References</h1>
+<h1 id="references" class="unnumbered">8. References</h1>
 <div id="refs" class="references">
 <div id="ref-elligator">
 <p>Bernstein, Daniel J., Mike Hamburg, Anna Krasnova, and Tanja Lange. 2013. “Elligator: Elliptic-curve points indistinguishable from uniform random strings.” Cryptology ePrint Archive, Report 2013/325. <a href="http://eprint.iacr.org/2013/325" class="uri">http://eprint.iacr.org/2013/325</a>.</p>

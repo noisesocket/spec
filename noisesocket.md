@@ -1653,24 +1653,116 @@ An example of such prologue could be found in Appendix
 After handshake is complete and both [Cipher states](#the-cipherstate-object) are created, all following packets must be encrypted using those cipherstates.
 
 
-5. Test vectors
+5. API
+======
+We present a set of methods which will help to implement NoiseSocket flow
+
+ * **`ReadString(buffer)`**  reads 1 byte `len` of the following string from `buffer` and then `len` bytes string itself. Advances read position to `len + 1`
+
+ * **`WriteString(string, buffer)`** writes 1 byte `len` of the following string to `buffer` and then string itself.
+
+ * **`ReadData(buffer)`** reads 2 byte `len` of the following data from `buffer` and then `len` bytes of data. Advances position to `len + 2`
+
+ * **`WriteData(data, buffer)`** writes 2 bytes `len` of the following data to `buffer` and then the data itself.
+
+ * **`CalculatePrologue(protocols)`** takes a list of protocol names in the order they will be used in the handshake.
+ 
+ 	Variables:
+ 	* **`prologue_buffer`** - a byte buffer to write to
+
+    Algorithm:
+
+ 	* Writes 1 byte number of protocols `N` to `prologue_buffer`
+ 	* Does `N` times:
+ 		* Takes the next `protocol_name` from `protocols`
+ 		* Calls `WriteString(protocol_name, prologue_buffer)`
+
+ 	Returns:
+ 	* `prologue_buffer`
+
+ * **`ComposeInitiatorHandshakeMessages(s, data, protocols)`** takes client's static key `s`, optional payload `data` and a list of protocols, same that was used for caling `CalculatePrologue`
+ 	Variables:
+ 	* **`result_buffer`** - buffer, containing the resulting byte sequence
+ 	* **`message_buffer`** - temporary buffer to hold the result of calling `WriteMessage` on the current `handshake_state`
+ 	* **`handshake_states`** - an array of all instances of `HandshakeState` objects, created during this method
+
+    Algorithm:
+    
+ 	* Calls `CalculatePrologue(protocols)` to receive `prologue`
+ 	* Writes the 1 byte number of protocols `N` to `result_buffer`
+ 	* Does `N` times
+ 		* Takes the next `protocol` from `protocols`
+ 		* Calls `WriteString(protocol_name, result_buffer)`
+ 		* Calls `GENERATE_KEYPAIR()` to generate new `e`
+ 		* Initializes new `HandshakeState` instance with `DH functions`, `Cipher functions` and `Hash functions`, described in `protocol` and also `s`, `e` and `prologue` to receive `handshake_state`
+ 		* initializes new `message_buffer`
+ 		* Calls `WriteMessage(data, message_buffer)` on `handshake_state`
+ 		* Calls `WriteData(message_buffer, result_buffer)`
+ 		* Adds `handshake_state` to `handshake_states`
+
+ 	Returns:
+ 	* `result_buffer`
+ 	* `handshake_states`
+
+ * **`ParseFirstMessage(message, s)`** receives `message`, created by calling `ComposeInitiatorHandshakeMessages` and static keypair `s`
+ 	Variables:
+ 	* **`protocols`** - a list of protocol names, parsed from `message`
+ 	* **`sub_messages`** - a list of byte sequences in order they were written to `message` by calling `WriteMessage`
+ 	* **`handshake_state`** - a state that was created when server chose one of the incoming messages
+ 	* **`message_index`** - an index of the message that server chose
+ 	* **`payload`** - an optional payload, provided in the first message
+
+    Algorithm:
+ 	* Reads 1 byte number of sub-messages `N`
+ 	* Does `N` times:
+ 		* Calls `ReadString(message)` to receive `protocol_name`
+ 		* Calls `ReadData(message)` to receive `sub_message`
+ 		* Appends `protocol_name` to `protocols`
+ 		* Appends `sub_message` to `sub_messages`
+ 	* Calls `CalculatePrologue(protocols)` to receive `prologue`
+ 	* Chooses a protocol, according to server protocol priority and the corresponding `sub_message` from `sub_messages`. 
+ 	* Writes index of the chosen `protocol` to `message_index`
+ 	* Calls `GENERATE_KEYPAIR()` to generate new `e`
+ 	* Initializes new `HandshakeState` instance with `DH functions`, `Cipher functions` and `Hash functions`, described in `protocol` and also `s`, `e` and `prologue` to receive `handshake_state`
+ 	* Calls `ReadMessage(sub_messages)` on `handshake_state` to receive an optional `payload`
+
+ 	Returns:
+ 	* `message_index`
+ 	* `handshake_state`
+ 	* `payload`
+
+
+ * **`ComposeServerResponseMessage(handshake_state, index, data)`** receives `handshake_state`, `index` and optional `data` to send to client
+
+ 	Variables:
+ 	* **`result_buffer`** - buffer, containing the resulting byte sequence
+
+    Algorithm:
+    
+ 	* Writes `index` to `result_buffer`
+ 	* Calls WriteMessage(result_buffer, data) on handshake_state
+
+ 	Returns:
+ 	* `result_buffer`
+
+
+6. Test vectors
 ===================
 
-Initial message is moved to the root to reduce the file size. It contains 16 sub-messages each correspond to a specific Noise protocol. The order of protocols can be seen in [Protocols] array.
+Test vectors consist of one [initial message](#first-handshake-message), [prologue](#prologue) and a set of private keys. Two for initiator (static, ephemeral) and two for responder.
 
-"Server" chooses which sub-message to answer and this forms a session. 
-Each session contains an array of transport messages which consist of raw wire data ("Packet" field), payload and fields
+Initial message contains 16 sub-messages each correspond to a specific Noise protocol. The order of protocols can be seen in `Protocols` array.
 
-"Payload" is the representation of NoiseSocket fields in the order they appear in nonempty message payload. It may or may not be present during handshake (1st XX message has always an empty payload).
+"Server" chooses which sub-message to answer and this forms a `session`. 
+Each session contains an array of transport messages which consist of raw wire data ("Packet" field), and payload
 
-Nonempty payload contains 1 or more fields. There's one field during handshake (dummy type 1024) and two (0 - data and 1 - padding) for transport messages.
 
-6. IPR
+7. IPR
 ========
 
 The NoiseSocket specification (this document) is hereby placed in the public domain.
 
 \pagebreak
 
-7.  References
+8.  References
 ================
