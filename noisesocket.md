@@ -2,7 +2,7 @@
 title:      'The NoiseSocket Protocol'
 author:     'Alexey Ermishkin (scratch@virgilsecurity.com)'
 revision:   '0draft'
-date:       '2017-02-25'
+date:       '2017-05-01'
 bibliography: 'my.bib'
 link-citations: 'true'
 csl:        'ieee-with-url.csl'
