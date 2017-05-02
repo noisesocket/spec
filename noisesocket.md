@@ -1,6 +1,11 @@
 ---
 title:      'The NoiseSocket Protocol'
-
+author:     'Alexey Ermishkin (scratch@virgilsecurity.com)'
+revision:   '0draft'
+date:       '2017-02-25'
+bibliography: 'my.bib'
+link-citations: 'true'
+csl:        'ieee-with-url.csl'
 ---
 
 **Abstract**
@@ -537,35 +542,7 @@ mix prologue data into encryption keys.  If an input contains secret data
 that's intended to strengthen the encryption, a "PSK" handshake should be used
 instead (see next section). 
 
-7. Pre-shared symmetric keys
-=============================
-
-Noise provides an optional **pre-shared symmetric key** or **PSK** mode to
-support protocols where both parties already have a shared secret key.  When
-using pre-shared symmetric keys, the following changes are made:
-
- * Protocol names ([Section 11](#protocol-names)) use the prefix `"NoisePSK_"` instead of `"Noise_"`.
-
- * `Initialize()` takes an additional `psk` argument, which is a sequence of
-   32 bytes.  Immediately after `MixHash(prologue)` it sets `ck, temp = HKDF(ck, psk)`, 
-   then calls `MixHash(temp)`.  This mixes the pre-shared key into the
-   chaining key, and also mixes a one-way function of the pre-shared key into
-   the `h` value to ensure that `h` is a function of all handshake inputs.
-
- * `WriteMessage()` and `ReadMessage()` are modified when processing the `"e"`
-   token to call `MixKey(e.public_key)` as the final step.  Because the initial
-   messages in a handshake pattern are required to start with `"e"` ([Section 8.1](#pattern-validity)), 
-   this ensures `k` is initialized from the pre-shared key.  This also uses the
-   ephemeral public key's value as a random nonce to prevent re-using the same
-   `k` and `n` for different messages.
-
- * `Initialize()` is modified when processing an `"e"` token in the initiator's
-   pre-message.  A handshake pattern with such a pre-message is a **fallback
-   pattern** (see [Section 8.1](#pattern-validity)).  In this case, `MixKey()`
-   is called on the ephemeral public key immediately after calling `MixHash()`
-   on it.  This accomplishes the same randomization as the previous bullet.
-
-8. Handshake patterns 
+7. Handshake patterns 
 ======================
 
 A **message pattern** is some sequence of tokens from the set `("e", "s", "ee", "es", "se", "ss")`.  
@@ -634,7 +611,7 @@ second message.
       -> e, es 
       <- e, ee
 
-8.1. Pattern validity 
+7.1. Pattern validity 
 ----------------------
 
 Handshake patterns must be **valid** in the following senses:
@@ -674,51 +651,7 @@ these checks could result in subtle but catastrophic security flaws.
 Users are recommended to only use the handshake patterns listed below, or other
 patterns that have been vetted by experts to satisfy the above checks.
 
-8.2. One-way patterns 
-----------------------
-
-The following example handshake patterns represent "one-way" handshakes
-supporting a one-way stream of data from a sender to a recipient.  These
-patterns could be used to encrypt files, database records, or other
-non-interactive data streams.
-
-Following a one-way handshake the sender can send a stream of transport
-messages, encrypting them using the first `CipherState` returned by `Split()`.
-The second `CipherState` from `Split()` is discarded - the recipient must not
-send any messages using it (as this would violate the rules in [Section 8.1](#pattern-validity)).
-
-One-way patterns are named with a single character, which indicates the 
-status of the sender's static key:
-
- * **`N`** = **`N`**o static key for sender
- * **`K`** = Static key for sender **`K`**nown to recipient
- * **`X`** = Static key for sender **`X`**mitted ("transmitted") to recipient
-
-\pagebreak
-
-+-------------------------+
-|     Noise_N(rs):        |
-|       <- s              |
-|       ...               |
-|       -> e, es          |
-+-------------------------+
-|     Noise_K(s, rs):     |
-|       -> s              |
-|       <- s              |
-|       ...               |
-|       -> e, es, ss      |
-+-------------------------+
-|     Noise_X(s, rs):     |
-|       <- s              |
-|       ...               |
-|       -> e, es, s, ss   |
-+-------------------------+
-
-`Noise_N` is a conventional DH-based public-key encryption.  The other patterns
-add sender authentication, where the sender's public key is either known to the
-recipient beforehand (`Noise_K`) or transmitted under encryption (`Noise_X`).
-
-8.3. Interactive patterns 
+7.2. Interactive patterns 
 --------------------------
 
 The following example handshake patterns represent interactive protocols.
@@ -810,7 +743,7 @@ of "strong" forward secrecy.
 
 The next section provides more analysis of these payload security properties.
 
-8.4. Payload security properties
+7.3. Payload security properties
 ---------------------------------
 
 The following table lists the security properties for Noise handshake and
@@ -989,146 +922,12 @@ received.
 |       ->                        2                5           |         
 |       <-                        2                5           |         
 +--------------------------------------------------------------+
-
-
-8.5. Identity hiding
----------------------
-
-The following table lists the identity hiding properties for all the named
-patterns in [Section 8.2](#one-way-patterns) and [Section 8.3](#interactive-patterns).  Each
-pattern is assigned properties describing the confidentiality supplied to the
-initiator's static public key, and to the responder's static public key.  The
-underlying assumptions are that ephemeral private keys are secure, and that
-parties abort the handshake if they receive a static public key from the other
-party which they don't trust.
-
-This section only considers identity leakage through static public key fields
-in handshakes.  Of course, the identities of Noise participants might be
-exposed through other means, including payload fields, traffic analysis, or
-metadata such as IP addresses.
-
-The properties for the relevant public key are:
-
-  0. Transmitted in clear.
-
-  1. Encrypted with forward secrecy, but can be probed by an
-     anonymous initiator.
-
-  2. Encrypted with forward secrecy, but sent to an anonymous responder. 
-
-  3. Not transmitted, but a passive attacker can check candidates for
-     the responder's private key and determine whether the candidate is correct.
-
-  4. Encrypted to responder's static public key, without forward secrecy.
-     If an attacker learns the responder's private key they can decrypt the
-     initiator's public key. 
-
-  5. Not transmitted, but a passive attacker can check candidates for the pair
-     of (responder's private key, initiator's public key) and learn whether the
-     candidate pair is correct.
-
-  6. Encrypted but with weak forward secrecy.  An active attacker who
-     pretends to be the initiator without the initiator's static private key,
-     then later learns the initiator private key, can then decrypt the
-     responder's public key.
-
-  7. Not transmitted, but an active attacker who pretends to be the
-     initator without the initiator's static private key, then later learns a
-     candidate for the initiator private key, can then check whether the
-     candidate is correct.
-
-  8. Encrypted with forward secrecy to an authenticated party.
-
-<!-- end of list - necesary to trick Markdown into seeing the following -->
-
-
-+------------------------------------------+
-|                Initiator      Responder  |           
-+------------------------------------------+
-|     Noise_N        -              3      |
-+------------------------------------------+
-|     Noise_K        5              5      |
-+------------------------------------------+
-|     Noise_X        4              3      |
-+------------------------------------------+
-|     Noise_NN       -              -      |
-+------------------------------------------+
-|     Noise_NK       -              3      |
-+------------------------------------------+
-|     Noise_NX       -              1      |
-+------------------------------------------+
-|     Noise_XN       2              -      |
-+------------------------------------------+
-|     Noise_XK       8              3      |
-+------------------------------------------+
-|     Noise_XX       8              1      |
-+------------------------------------------+
-|     Noise_KN       7              -      |
-+------------------------------------------+
-|     Noise_KK       5              5      |
-+------------------------------------------+
-|     Noise_KX       7              6      |
-+------------------------------------------+
-|     Noise_IN       0              -      |
-+------------------------------------------+
-|     Noise_IK       4              3      |
-+------------------------------------------+
-|     Noise_IX       0              6      |
-+------------------------------------------+
      
 
-
-8.6. More patterns 
---------------------
-
-The patterns in the previous sections are the best option for most scenarios.
-
-However, to construct new patterns we can apply some **transformation** to an existing pattern, and name the resulting pattern by appending the transformation name to the existing pattern's name.
-
-For example, if you don't care about identity hiding, you could apply a "noidh" transformation which moves static public keys earlier in messages, so they are sent in cleartext where possible.  This transforms the patterns from the left column to the right column:
-
-\pagebreak
-
-+-------------------------------+-----------------------------+
-|     Noise_X(s, rs):           |      Noise_Xnoidh(s, rs):   |
-|       <- s                    |        <- s                 |
-|       ...                     |        ...                  |
-|       -> e, es, s, ss         |        -> e, s, es, ss      |
-+-------------------------------+-----------------------------+
-|     Noise_NX(rs):             |      Noise_NXnoidh(rs):     |           
-|       -> e                    |        -> e                 |
-|       <- e, ee, s, es         |        <- e, s, ee, es      |          
-+-------------------------------+-----------------------------+
-|     Noise_XX(s, rs):          |      Noise_XXnoidh(s, rs):  |              
-|       -> e                    |        -> e                 |
-|       <- e, ee, s, es         |        <- e, s, ee, es      |          
-|       -> s, se                |        -> s, se             |   
-+-------------------------------+-----------------------------+
-|     Noise_KX(s, rs):          |      Noise_KXnoidh(s, rs):  |                                  
-|       -> s                    |        -> s                 |
-|       ...                     |        ...                  |
-|       -> e                    |        -> e                 |
-|       <- e, ee, se, s, es     |        <- e, s, ee, se, es  |              
-+-------------------------------+-----------------------------+
-|     Noise_IK(s, rs):          |      Noise_IKnoidh(s, rs):  |
-|       <- s                    |        <- s                 |
-|       ...                     |        ...                  |
-|       -> e, es, s, ss         |        -> e, s, es, ss      |          
-|       <- e, ee, se            |        <- e, ee, se         |       
-+-------------------------------+-----------------------------+
-|     Noise_IX(s, rs):          |      Noise_IXnoidh(s, rs):  |
-|       -> e, s                 |        -> e, s              |
-|       <- e, ee, se, s, es     |        <- e, s, ee, se, es  |
-+-------------------------------+-----------------------------+
-
-
-Other tranformations might add or remove `"ss"` operations, or defer DH operations
-until later.
-
-9. Advanced uses
+8. Advanced uses
 =================
 
-9.1. Dummy static public keys
+8.1. Dummy static public keys
 ------------------------------
 
 Consider a protocol where an initiator will authenticate herself if the responder
@@ -1145,133 +944,11 @@ It also doesn't reveal which option was chosen from message sizes.  It could be
 extended to allow a `Noise_XX` pattern to support any permutation of
 authentications (initiator only, responder only, both, or none).
 
-9.2. Compound protocols and "Noise Pipes"
-------------------------------------------
 
-Consider a protocol where the initiator can attempt zero-RTT encryption based
-on the responder's static public key.  If the responder has changed his static
-public key, the parties will need to switch to a **fallback handshake** where the
-responder transmits the new static public key and the initiator resends the
-zero-RTT data.
-
-This can be handled by both parties re-initializing their `HandshakeState` and
-executing a **fallback handshake pattern**.  Using handshake re-initialization to
-switch from one "simple" Noise protocol to another results in a **compound
-protocol**.
-
-Public keys that were sent in the initial message should be represented as
-pre-messages in the second handshake.  Because an ephemeral public key was sent in
-the initiator's first message and used as a pre-message in the second handshake, the
-second's handshake pattern is a "fallback pattern", and the initiator does not need to
-send a new ephemeral (see [Section 8.1](pattern-validity)).
-
-Re-initializing with a fallback pattern is only allowed if the new handshake and
-old handshake have different protocol names (see [Section 11](#protocol-names)) 
-and the rules for handling PSKs are followed (see [Section 7](#pre-shared-symmetric-keys)).
-
-If any negotiation occurred in the first handshake, the first handshake's `h`
-variable should be provided as prologue to the second handshake.
-
-By way of example, this section defines the **Noise Pipe** compound protocol.
-This protocol uses three handshake patterns - two defined in the previous
-section, and a new one:
-
- * `Noise_XX` is used for an initial **full handshake** if the parties haven't communicated before, after
-which the initiator can cache the responder's static public key.  
-
- * `Noise_IK` is used for a zero-RTT **abbreviated handshake**.  
-
- * If the responder fails to decrypt the first `Noise_IK` message (perhaps due
-   to changing his static key), the responder will initiate a new **fallback
-   handshake** using the `Noise_XXfallback` pattern which is identical to
-   `Noise_XX` except re-using the ephemeral public key from the first
-   `Noise_IK` message as a pre-message public key (thus is a **fallback pattern**).
-
-Below are the three patterns used for Noise Pipes:
-
-    Noise_XX(s, rs):  
-      -> e
-      <- e, ee, s, es
-      -> s, se
-
-    Noise_IK(s, rs):                   
-      <- s                         
-      ...
-      -> e, es, s, ss          
-      <- e, ee, se
-                                        
-    Noise_XXfallback(e, s, rs):                   
-      -> e
-      ...
-      <- e, ee, s, es
-      -> s, se
-
-There needs to be some way for the recipient of a message to distinguish
-whether it's the next message in the current handshake pattern, or requires
-re-initialization for a new pattern.  For example, each handshake message could
-be preceded by a `type` byte (see [Section 12](#application-responsibilities)).  This byte is not
-part of the Noise message proper, but simply signals when re-initialization is
-needed.  It could have the following meanings:
-
- * If `type == 0` in the initiator's first message then the initiator is
-   performing a `Noise_XX` handshake *(full handshake)*.
-
- * If `type == 1` in the initiator's first message then the initiator is
-   performing a `Noise_IK` handshake *(attempted abbreviated handshake)*.
-
- * If `type == 0` in the responder's first `Noise_IK` response then the
-   responder accepted the `Noise_IK` message *(successful abbreviated handshake)*.
-
- * If `type == 1` in the responder's first `Noise_IK` response then the
-   responder failed to authenticate the initiator's `Noise_IK` message and is
-   performing a `Noise_XXfallback` handshake, using the initiator's ephemeral
-   public key as a pre-message *(fallback handshake)*.
-
-Note that the `type` byte doesn't need to be explicitly authenticated (as
-prologue, or additional AEAD data), since it's implicitly authenticated if the
-message is processed succesfully.
-
-9.3. Protocol indistinguishability
------------------------------------
-Parties may wish to hide what protocol they are executing from an eavesdropper.
-For example, suppose parties are using Noise Pipes, and want to hide whether
-they are performing a full handshake, abbreviated handshake, or fallback
-handshake.  
-
-This is fairly easy:
-
- * The first three messages can have their payloads padded with random bytes to
-   a constant size, regardless of which handshake is executed.
-
- * Instead of a `type` byte, the responder can use trial decryption to
-   differentiate between an initial message using `Noise_XX` or `Noise_IK`.
-
- * Instead of a `type` byte, an initiator who sent a `Noise_IK` initial
-   message can use trial decryption to differentiate between a response using
-   `Noise_IK` or `Noise_XXfallback`. 
-
-This leaves the Noise ephemerals in the clear, so an eavesdropper might suspect
-the parties are using Noise, even if it can't distinguish the handshakes.  To
-make the ephemerals indistinguishable from random, techniques like
-Elligator [@elligator] could be used.
-
-9.4. Channel binding
----------------------
-Parties may wish to execute a Noise protocol, then perform authentication at the 
-application layer using signatures, passwords, or something else.
-
-To support this, Noise libraries should expose the final value of `h` to the
-application as a **handshake hash** which uniquely identifies the Noise
-session.
-
-Parties can then sign the handshake hash, or hash it along with their password,
-to get an authentication token which has a "channel binding" property: the token
-can't be used by the receiving party with a different sesssion.
-
-10. DH functions, cipher functions, and hash functions
+9. DH functions, cipher functions, and hash functions
 ======================================================
 
-10.1. The `25519` DH functions
+9.1. The `25519` DH functions
 ----------------------------
 
  * **`GENERATE_KEYPAIR()`**: Returns a new Curve25519 key pair.
@@ -1281,7 +958,7 @@ can't be used by the receiving party with a different sesssion.
 
  * **`DHLEN`** = 32
 
-10.2. The `448` DH functions
+9.2. The `448` DH functions
 --------------------------
 
  * **`GENERATE_KEYPAIR()`**: Returns a new Curve448 key pair.
@@ -1291,7 +968,7 @@ can't be used by the receiving party with a different sesssion.
 
  * **`DHLEN`** = 56
 
-10.3. The `ChaChaPoly` cipher functions
+9.3. The `ChaChaPoly` cipher functions
 ------------------------------
 
  * **`ENCRYPT(k, n, ad, plaintext)` / `DECRYPT(k, n, ad, ciphertext)`**:
@@ -1301,7 +978,7 @@ can't be used by the receiving party with a different sesssion.
    implementations it's compatible to encode `n` directly into the ChaCha20
    nonce without the 32-bit zero prefix).
 
-10.4. The `AESGCM` cipher functions
+9.4. The `AESGCM` cipher functions
 ---------------------------
 
  * **`ENCRYPT(k, n, ad, plaintext)` / `DECRYPT(k, n, ad, ciphertext)`**: AES256
@@ -1309,35 +986,35 @@ can't be used by the receiving party with a different sesssion.
    ciphertext.  The 96-bit nonce is formed by encoding 32 bits of zeros
    followed by big-endian encoding of `n`.
 
-10.5. The `SHA256` hash function
+9.5. The `SHA256` hash function
 ------------------------------
 
  * **`HASH(input)`**: `SHA-256` from [@nistsha2].
  * **`HASHLEN`** = 32
  * **`BLOCKLEN`** = 64
 
-10.6. The `SHA512` hash function
+9.6. The `SHA512` hash function
 ------------------------------
 
  * **`HASH(input)`**: `SHA-512`  from [@nistsha2].
  * **`HASHLEN`** = 64
  * **`BLOCKLEN`** = 128
 
-10.7. The `BLAKE2s` hash function
+9.7. The `BLAKE2s` hash function
 -------------------------------
 
  * **`HASH(input)`**: `BLAKE2s` from [@rfc7693] with digest length 32.
  * **`HASHLEN`** = 32
  * **`BLOCKLEN`** = 64
 
-10.8. The `BLAKE2b` hash function
+9.8. The `BLAKE2b` hash function
 -------------------------------
 
  * **`HASH(input)`**: `BLAKE2b` from [@rfc7693] with digest length 64.
  * **`HASHLEN`** = 64
  * **`BLOCKLEN`** = 128
 
-11. Protocol names 
+10. Protocol names 
 ===================
 
 To produce a **Noise protocol name** for `Initialize()` you concatenate the
@@ -1357,7 +1034,7 @@ instead of `"Noise_"`:
  * `NoisePSK_XXfallback_448_AESGCM_SHA512`
  * `NoisePSK_IK_448_ChaChaPoly_BLAKE2b`
 
-12. Application responsibilities
+11. Application responsibilities
 ================================
 
 An application built on Noise must consider several issues:
@@ -1404,7 +1081,7 @@ An application built on Noise must consider several issues:
 
 \pagebreak
 
-13. Security considerations
+12. Security considerations
 ===========================
 
 This section collects various security considerations:
@@ -1478,7 +1155,7 @@ This section collects various security considerations:
    identically in all cases.  This may require mandating exact behavior for
    handling of invalid DH public keys.
 
-14. Rationale
+13. Rationale
 =============
 
 This section collects various design rationale:
