@@ -41,7 +41,7 @@ For the simplicity of processing, all handshake messages have identical structur
  - noise_message_len (2 bytes)
  - noise_message
 
-All lengths are big-endian.
+All numbers are big-endian.
 
 They are sent according to the corresponding Noise protocol. 
 
@@ -73,13 +73,13 @@ Though it can be present in every handshake message, it can safely be used only 
 Noise handshake through Prologue or other mechanisms like calling MixHash() before writing the message
 
 
-An example negotiation_data which allows to determine which algorithms and pattern were used:
+An example first message negotiation_data which allows to determine which algorithms and pattern were used:
 
- - version_id : 2 bytes ( has value `1` by default)
- - pattern_id : 1 byte
- - dh_id      : 1 byte
- - cipher_id  : 1 byte
- - hash_id    : 1 byte
+ - version_id  (2 bytes) ( has value `1` by default)
+ - pattern_id  (1 byte)
+ - dh_id       (1 byte)
+ - cipher_id   (1 byte)
+ - hash_id     (1 byte)
 
 
 pattern_id, dh_id, cipher_id and hash_id can be taken from the [Noise-c](https://github.com/rweather/noise-c/blob/master/include/noise/protocol/constants.h) implementation
@@ -90,6 +90,14 @@ For example, NoiseXX_25519_AESGCM_SHA256 would be
  - dh_id : 1
  - cipher_id : 2
  - hash_id : 3
+ 
+ 
+ An example of second message negotiation data:
+
+ - version_id (1 byte) (usually same as client)
+ - status_id  (1 byte) (0 if handshake continues, 1 if fallback, 0xFF if server does not understand client)
+ 
+Third message's negotiation data is always zero length.
 
 1.2. Transport message
 ------------------------- 

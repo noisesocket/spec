@@ -49,7 +49,7 @@
 <li>noise_message_len (2 bytes)</li>
 <li>noise_message</li>
 </ul>
-<p>All lengths are big-endian.</p>
+<p>All numbers are big-endian.</p>
 <p>They are sent according to the corresponding Noise protocol.</p>
 <p>To implement Noise_XX 3 messages need to be sent:</p>
 <pre><code>  -&gt; ClientHello
@@ -65,13 +65,13 @@
 <h2 id="negotiation-data">1.1.1. Negotiation data</h2>
 <p>The negotiation_data field is used to identify the protocols used, versions, signs of using a fallback protocol and other data that must be processed before reading the actual noise_message.</p>
 <p>Though it can be present in every handshake message, it can safely be used only when it is included into the Noise handshake through Prologue or other mechanisms like calling MixHash() before writing the message</p>
-<p>An example negotiation_data which allows to determine which algorithms and pattern were used:</p>
+<p>An example first message negotiation_data which allows to determine which algorithms and pattern were used:</p>
 <ul>
-<li>version_id : 2 bytes ( has value <code>1</code> by default)</li>
-<li>pattern_id : 1 byte</li>
-<li>dh_id : 1 byte</li>
-<li>cipher_id : 1 byte</li>
-<li>hash_id : 1 byte</li>
+<li>version_id (2 bytes) ( has value <code>1</code> by default)</li>
+<li>pattern_id (1 byte)</li>
+<li>dh_id (1 byte)</li>
+<li>cipher_id (1 byte)</li>
+<li>hash_id (1 byte)</li>
 </ul>
 <p>pattern_id, dh_id, cipher_id and hash_id can be taken from the <a href="https://github.com/rweather/noise-c/blob/master/include/noise/protocol/constants.h">Noise-c</a> implementation</p>
 <p>For example, NoiseXX_25519_AESGCM_SHA256 would be</p>
@@ -81,6 +81,12 @@
 <li>cipher_id : 2</li>
 <li>hash_id : 3</li>
 </ul>
+<p>An example of second message negotiation data:</p>
+<ul>
+<li>version_id (1 byte) (usually same as client)</li>
+<li>status_id (1 byte) (0 if handshake continues, 1 if fallback, 0xFF if server does not understand client)</li>
+</ul>
+<p>Third message's negotiation data is always zero length.</p>
 <h2 id="transport-message">1.2. Transport message</h2>
 <p>Each transport message has a special 'data_len' field inside its plaintext payload, which specifies the size of the actual data. Everything after the data is considered padding. 65517 is the max value for data_len: 65535 (noise_message_len) - 16 (for authentication tag) - 2 (for data_len field itself)</p>
 <p>The encrypted packet has the following structure:</p>
