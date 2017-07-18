@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="Alexey Ermishkin (scratch@virgilsecurity.com)" />
+  <meta name="date" content="2017-07-12" />
+  <title>The NoiseSocket Protocol</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="spec_markdown.css" type="text/css" />
+</head>
+<body>
+<div id="header">
+<h1 class="title">The NoiseSocket Protocol</h1>
+<b>Author:</b> Alexey Ermishkin (scratch@virgilsecurity.com)<br/>
+<b>Revision:</b> 0draft<br/>
+<b>Date:</b> 2017-07-12<br/>
+</div>
+<div id="TOC">
+<h2 class="toc">Table of Contents</h2>
+<ul>
+<li><a href="#abstract"><strong>Abstract</strong></a></li>
+<li><a href="#messages">1. Messages</a><ul>
+<li><a href="#handshake-message">1.1. Handshake message</a></li>
+<li><a href="#negotiation-data">1.1.1. Negotiation data</a></li>
+<li><a href="#transport-message">1.2. Transport message</a></li>
+</ul></li>
+<li><a href="#prologue">2. Prologue</a></li>
+<li><a href="#api">5. API</a></li>
+<li><a href="#ipr">7. IPR</a></li>
+<li><a href="#references">8. References</a></li>
+</ul>
+</div>
+<h1 id="abstract"><strong>Abstract</strong></h1>
+<p>NoiseSocket is an extension of the Noise Protocol Framework (developed by the authors of Signal and currently used by WhatsApp) that enables quick and seamless secure link between multiple parties with minimal code space overhead, small keys, and extremely fast speed. It uses raw public keys, modern AEAD ciphers and hash functions. NoiseSocket is designed to overcome the shortcomings of existing TLS implementations and targets IoT devices, microservices, back-end applications such as datacenter-to-datacenter communications, and use cases where third-party certificate of authority infrastructure is not optimal.</p>
+
+<h1 id="messages">1. Messages</h1>
+<p>There are two types of messages which differ by structure:</p>
+<ul>
+<li>Section <a href="handshake-message">1.1</a> Handshake message</li>
+<li>Section <a href="transport-message">1.2</a> Transport message</li>
+</ul>
+<h2 id="handshake-message">1.1. Handshake message</h2>
+<p>For the simplicity of processing, all handshake messages have identical structure:</p>
+<ul>
+<li>negotiation_data_len (2 bytes)</li>
+<li>negotiation_data</li>
+<li>noise_message_len (2 bytes)</li>
+<li>noise_message</li>
+</ul>
+<p>All lengths are big-endian.</p>
+<p>They are sent according to the corresponding Noise protocol.</p>
+<p>To implement Noise_XX 3 messages need to be sent:</p>
+<pre><code>  -&gt; ClientHello
+  &lt;- ServerAuth
+  -&gt; ClientAuth</code></pre>
+<p>2 for Noise_IK</p>
+<pre><code>  -&gt; ClientHello
+  &lt;- ServerAuth</code></pre>
+<p>3 If Fallback is used:</p>
+<pre><code>  -&gt; ClientHello
+  &lt;- ServerHello
+  -&gt; ClientAuth</code></pre>
+<h2 id="negotiation-data">1.1.1. Negotiation data</h2>
+<p>The negotiation_data field is used to identify the protocols used, versions, signs of using a fallback protocol and other data that must be processed before reading the actual noise_message.</p>
+<p>Though it can be present in every handshake message, it can safely be used only when it is included into the Noise handshake through Prologue or other mechanisms like calling MixHash() before writing the message</p>
+<p>An example negotiation_data which allows to determine which algorithms and pattern were used:</p>
+<ul>
+<li>version_id : 2 bytes ( has value <code>1</code> by default)</li>
+<li>pattern_id : 1 byte</li>
+<li>dh_id : 1 byte</li>
+<li>cipher_id : 1 byte</li>
+<li>hash_id : 1 byte</li>
+</ul>
+<p>pattern_id, dh_id, cipher_id and hash_id can be taken from the <a href="https://github.com/rweather/noise-c/blob/master/include/noise/protocol/constants.h">Noise-c</a> implementation</p>
+<p>For example, NoiseXX_25519_AESGCM_SHA256 would be</p>
+<ul>
+<li>pattern_id : 9</li>
+<li>dh_id : 1</li>
+<li>cipher_id : 2</li>
+<li>hash_id : 3</li>
+</ul>
+<h2 id="transport-message">1.2. Transport message</h2>
+<p>Each transport message has a special 'data_len' field inside its plaintext payload, which specifies the size of the actual data. Everything after the data is considered padding. 65517 is the max value for data_len: 65535 (noise_message_len) - 16 (for authentication tag) - 2 (for data_len field itself)</p>
+<p>The encrypted packet has the following structure:</p>
+<ul>
+<li>packet_len (2 bytes)</li>
+<li>encrypted data</li>
+</ul>
+<p>Plaintext payload has the following structure:</p>
+<ul>
+<li>data_len (2 bytes)</li>
+<li>data</li>
+<li>remaining bytes: padding</li>
+</ul>
+<h1 id="prologue">2. Prologue</h1>
+<p>Client uses following extra data and fields from the first message to calculate the Noise prologue:</p>
+<ul>
+<li>&quot;NoiseSocketInit&quot; string</li>
+<li>negotiation_data_len</li>
+<li>negotiation_data</li>
+</ul>
+<p>If server decides to start a new protocol instead of responding to the first handshake message, it calculate the Noise prologue using the <strong>full first message contents</strong> plus the length and negotiation_data of its own response. String identifier also changes to &quot;NoiseSocketReInit&quot;.</p>
+<p>Thus the prologue structure:</p>
+<ul>
+<li>&quot;NoiseSocketReInit&quot; string</li>
+<li>negotiation_data_len</li>
+<li>negotiation_data</li>
+<li>noise_message_len</li>
+<li>noise_message</li>
+<li>negotiation_data_len</li>
+<li>negotiation_data</li>
+</ul>
+<h1 id="api">5. API</h1>
+<p>Client and server calls these in sequence.</p>
+<p><strong><code>InitializeClient</code></strong>:</p>
+<ul>
+<li>INPUT: dh, cipher, hash</li>
+<li>OUTPUT: session object</li>
+</ul>
+<p><strong><code>WriteHandshakeMessage</code></strong>:</p>
+<ul>
+<li>INPUT: [negotiation_data][, cleartext_body]
+<ul>
+<li>negotiation_data is zero-length if omitted</li>
+<li>cleartext_body is zero-length if omitted</li>
+</ul></li>
+<li>OUTPUT: handshake_message</li>
+</ul>
+<p><strong><code>PeekHandshakeMessage</code></strong>:</p>
+<ul>
+<li>INPUT: handshake_message</li>
+<li>OUTPUT: negotiation_data</li>
+</ul>
+<p><strong><code>ReadHandshakeMessage</code></strong>:</p>
+<ul>
+<li>INPUT: handshake_message</li>
+<li>OUTPUT: message_body</li>
+</ul>
+<p>After WriteClientAuth / ReadClient, both parties can call Write and Read:</p>
+<p><strong><code>Write</code></strong>:</p>
+<ul>
+<li>INPUT: transport_body[, padded_len]
+<ul>
+<li>padded_len is zero (no padding) if omitted</li>
+</ul></li>
+<li>OUTPUT: transport_message</li>
+</ul>
+<p><strong><code>Read</code></strong>:</p>
+<ul>
+<li>INPUT: transport_message</li>
+<li>OUTPUT: transport_body</li>
+</ul>
+<h1 id="ipr">7. IPR</h1>
+<p>The NoiseSocket specification (this document) is hereby placed in the public domain.</p>
+
+<h1 id="references">8. References</h1>
+</body>
+</html>
