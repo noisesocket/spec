@@ -20,7 +20,25 @@ microservices, back-end applications such as datacenter-to-datacenter communicat
 
 \pagebreak
 
-1. Messages
+
+1. Overview
+====================
+
+NoiseSocket describes the packet structure and processing rules for **`handshake`** and **`transport`** stages.
+
+Usually 3 or 2 messages are transmitted during the **`handshake`** which contain public keys as well as optional data like
+chosen protocol parameters, certificates, signatures and so on.
+For the Noise protocol framework to be able to "understand" the message contents, it must know all protocol parameters 
+beforehand. So, every handshake packet contains an optional field called `**negotiation_data**` which is not a part of the
+handshake message and is transmitted in plaintext. To protect the initial `**negotiation_data**` from modifications
+we make it a part of the **`Noise Prologue`**. Usage of `**negotiation_data**` without making it a part of the handshake
+is insecure.
+
+The **`transport`** phase is responsible for transmitting the actual data which will be encrypted and optionally padded 
+so that packet contents would not be easily distinguished from each other.
+
+
+2. Messages
 ========================
 
 There are two types of messages which differ by structure:
@@ -28,9 +46,9 @@ There are two types of messages which differ by structure:
    * Section [1.1](handshake-message) Handshake message
    * Section [1.2](transport-message) Transport message
    
-All numbers are big-endian.
+All numbers are unsigned big-endian.
 
-1.1. Handshake message
+2.1. Handshake message
 --------------------------------
  
 For the simplicity of processing, all handshake messages have identical structure:
@@ -40,12 +58,17 @@ For the simplicity of processing, all handshake messages have identical structur
  - noise_message_len (2 bytes)
  - noise_message
 
+`negotiation_data_len` and `noise_message_len` are 2-byte unsigned integers that store the number of bytes for the
+corresponding `negotiation_data` and `noise_message` fields.
 
-1.2. Transport message
+2.2. Transport message
 ------------------------- 
 
 Each transport message has a special 'data_len' field inside its plaintext payload,
 which specifies the size of the actual data. Everything after the data is considered padding.
+**Padding contents are arbitrary, and must be ignored by the recipient**.
+
+
 65517 is the max value for data_len:
 65535 (noise_message_len) - 16 (for authentication tag) - 2 (for data_len field itself)
 
@@ -54,7 +77,7 @@ The encrypted packet has the following structure:
  - packet_len (2 bytes)
  - encrypted data
 
-1.2.1. Plaintext payload and padding
+2.2.1. Plaintext payload and padding
 ------------------------------------
 
 Plaintext payload has the following structure:
@@ -63,25 +86,24 @@ Plaintext payload has the following structure:
  - data
  - remaining bytes: padding
  
-
-1.3. Negotiation data
+2.3. Negotiation data
 --------------------
 
 The negotiation_data field is used to identify the protocols used, versions, signs of using a fallback protocol
 and other data that must be processed before reading the actual noise_message.
 
-Though it can be present in every handshake message, it can safely be used only when it is included into the 
+Though it can be present in every handshake message, it can be used safely only when it is included into the 
 Noise handshake through Prologue or other mechanisms like calling MixHash() before writing the message.
 
 
-2. Prologue
+3. Prologue
 ===============
   
 Client uses following extra data and fields from the first message to calculate the Noise prologue:
  
- - "NoiseSocketInit" string
- - negotiation_data_len
- - negotiation_data
+       -> "NoiseSocketInit" string || negotiation_data_len || negotiation_data
+
+where `||` denotes concatenation
  
  
 If server decides to start a new protocol instead of responding to the first handshake message, it calculate the Noise
@@ -90,43 +112,37 @@ String identifier also changes to "NoiseSocketReInit".
 
 Thus the prologue structure:
 
- - "NoiseSocketReInit" string
- - negotiation_data_len
- - negotiation_data
- - noise_message_len
- - noise_message
- - negotiation_data_len
- - negotiation_data
-
-
-3. Running the protocol
-=====================
-They are sent according to the corresponding Noise protocol. 
-
-To implement Noise_XX 3 messages need to be sent:
-
-      -> ClientHello
-      <- ServerAuth
-      -> ClientAuth
+       <- "NoiseSocketReInit" string || first_handshake_message_contents 
+       || negotiation_data_len || negotiation_data
  
-2 for Noise_IK
+where `first_handshake_message_contents` is a concatenation of:
 
-      -> ClientHello
-      <- ServerAuth
- 
-3 If Fallback is used:
+       negotiation_data_len || negotiation_data || noise_message_len || noise_message
 
-      -> ClientHello
-      <- ServerHello
-      -> ClientAuth
+4. Running the protocol
+=======================
+
+Several rules must be applied to correctly run NoiseSocket protocol:
 
 
-4. API
+If noise_message is non-empty:
+  - If negotiation_data is empty, the sender accepted the previous
+Noise protocol
+  - If negotiation_data is non-empty, the sender has switched to a
+different Noise protocol
+
+If noise_message is empty:
+ - The sender is rejecting the previous Noise protocol, and can send
+error or retry data in the negotiation_data. The sender may leave the
+connection open so the recipient can try again.
+
+
+5. API
 ======
 
 Client and server calls these in sequence.
 
-**`InitializeClient`**:
+**`Initialize`**:
 
  * INPUT: dh, cipher, hash
  * OUTPUT: session object
@@ -156,6 +172,27 @@ After WriteClientAuth / ReadClient, both parties can call Write and Read:
  * INPUT: transport_body[, padded_len]
     - padded_len is zero (no padding) if omitted
  * OUTPUT: transport_message
+ 
+ Common logic for the `padded_len` is follows:
+ 
+ `packet_len` must be a multiple of the `padded_len`. To achieve this, you can apply the following steps:
+ 
+
+~~~~~~~
+maxPacketSize = 65517 /* See 2.2. Transport message*/
+
+for chunks of data sized maxPacketSize or less do {
+
+      if padded_len != 0{
+        packet_raw_len = 2 (data_len field) + transport_body_len + 16 (auth tag)
+        needed_padding = padded_len - packet_raw_len % padded_len 
+        if (packet_raw_len + needed_padding) > maxPacketSize {
+           needed_padding = maxPacketSize - packet_raw_len /* fill up to the packet size*/
+         }
+      ..add needed_padding bytes to the current chunk
+}
+~~~~~~~
+
 
 **`Read`**:
 
@@ -164,8 +201,7 @@ After WriteClientAuth / ReadClient, both parties can call Write and Read:
 
  
  
- 
-5. Examples
+6. Examples
 ===========
 
 An example first message negotiation_data which allows to determine which algorithms and pattern were used:
@@ -185,16 +221,10 @@ For example, NoiseXX_25519_AESGCM_SHA256 would be
  - dh_id : 1
  - cipher_id : 2
  - hash_id : 3
- 
- 
- An example of second message negotiation data:
-
- - version_id (2 bytes) (usually same as client)
- - status_id  (1 byte) (0 if handshake continues, 1 if fallback, 0xFF if server does not understand client)
 
 
 
-6. IPR
+7. IPR
 ========
 
 The NoiseSocket specification (this document) is hereby placed in the public domain.
