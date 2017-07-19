@@ -14,10 +14,8 @@ csl:        'ieee-with-url.csl'
 NoiseSocket is an extension of the Noise Protocol Framework 
 (developed by the authors of Signal and currently used by WhatsApp) that enables quick and seamless secure link
 between multiple parties with minimal code space overhead, small keys, and extremely fast speed. It uses raw public keys,
-modern AEAD ciphers and hash functions.
-NoiseSocket is designed to overcome the shortcomings of existing TLS implementations and targets IoT devices, 
-microservices, back-end applications such as datacenter-to-datacenter communications, and use cases where third-party 
-certificate of authority infrastructure is not optimal.
+modern AEAD ciphers and hash functions. It can be used where X.509 infrastructure isn't required and targets IoT devices, 
+microservices, back-end applications such as datacenter-to-datacenter communications.
 
 
 \pagebreak
@@ -30,6 +28,7 @@ There are two types of messages which differ by structure:
    * Section [1.1](handshake-message) Handshake message
    * Section [1.2](transport-message) Transport message
    
+All numbers are big-endian.
 
 1.1. Handshake message
 --------------------------------
@@ -41,63 +40,6 @@ For the simplicity of processing, all handshake messages have identical structur
  - noise_message_len (2 bytes)
  - noise_message
 
-All numbers are big-endian.
-
-They are sent according to the corresponding Noise protocol. 
-
-To implement Noise_XX 3 messages need to be sent:
-
-      -> ClientHello
-      <- ServerAuth
-      -> ClientAuth
- 
-2 for Noise_IK
-
-      -> ClientHello
-      <- ServerAuth
- 
-3 If Fallback is used:
-
-      -> ClientHello
-      <- ServerHello
-      -> ClientAuth
-
-
-1.1.1. Negotiation data
------------------------
-
-The negotiation_data field is used to identify the protocols used, versions, signs of using a fallback protocol
-and other data that must be processed before reading the actual noise_message.
-
-Though it can be present in every handshake message, it can safely be used only when it is included into the 
-Noise handshake through Prologue or other mechanisms like calling MixHash() before writing the message
-
-
-An example first message negotiation_data which allows to determine which algorithms and pattern were used:
-
- - version_id  (2 bytes) ( has value `1` by default)
- - pattern_id  (1 byte)
- - dh_id       (1 byte)
- - cipher_id   (1 byte)
- - hash_id     (1 byte)
-
-
-pattern_id, dh_id, cipher_id and hash_id can be taken from the [Noise-c](https://github.com/rweather/noise-c/blob/master/include/noise/protocol/constants.h) implementation
-
-For example, NoiseXX_25519_AESGCM_SHA256 would be
-
- - pattern_id : 9
- - dh_id : 1
- - cipher_id : 2
- - hash_id : 3
- 
- 
- An example of second message negotiation data:
-
- - version_id (1 byte) (usually same as client)
- - status_id  (1 byte) (0 if handshake continues, 1 if fallback, 0xFF if server does not understand client)
- 
-Third message's negotiation data is always zero length.
 
 1.2. Transport message
 ------------------------- 
@@ -112,11 +54,24 @@ The encrypted packet has the following structure:
  - packet_len (2 bytes)
  - encrypted data
 
+1.2.1. Plaintext payload and padding
+------------------------------------
+
 Plaintext payload has the following structure:
 
  - data_len (2 bytes)
  - data
  - remaining bytes: padding
+ 
+
+1.3. Negotiation data
+--------------------
+
+The negotiation_data field is used to identify the protocols used, versions, signs of using a fallback protocol
+and other data that must be processed before reading the actual noise_message.
+
+Though it can be present in every handshake message, it can safely be used only when it is included into the 
+Noise handshake through Prologue or other mechanisms like calling MixHash() before writing the message.
 
 
 2. Prologue
@@ -143,7 +98,30 @@ Thus the prologue structure:
  - negotiation_data_len
  - negotiation_data
 
-5. API
+
+3. Running the protocol
+=====================
+They are sent according to the corresponding Noise protocol. 
+
+To implement Noise_XX 3 messages need to be sent:
+
+      -> ClientHello
+      <- ServerAuth
+      -> ClientAuth
+ 
+2 for Noise_IK
+
+      -> ClientHello
+      <- ServerAuth
+ 
+3 If Fallback is used:
+
+      -> ClientHello
+      <- ServerHello
+      -> ClientAuth
+
+
+4. API
 ======
 
 Client and server calls these in sequence.
@@ -185,13 +163,43 @@ After WriteClientAuth / ReadClient, both parties can call Write and Read:
  * OUTPUT: transport_body
 
  
+ 
+ 
+5. Examples
+===========
 
-7. IPR
+An example first message negotiation_data which allows to determine which algorithms and pattern were used:
+
+ - version_id  (2 bytes) ( has value `1` by default)
+ - pattern_id  (1 byte)
+ - dh_id       (1 byte)
+ - cipher_id   (1 byte)
+ - hash_id     (1 byte)
+
+
+pattern_id, dh_id, cipher_id and hash_id can be taken from the [Noise-c](https://github.com/rweather/noise-c/blob/master/include/noise/protocol/constants.h) implementation
+
+For example, NoiseXX_25519_AESGCM_SHA256 would be
+
+ - pattern_id : 9
+ - dh_id : 1
+ - cipher_id : 2
+ - hash_id : 3
+ 
+ 
+ An example of second message negotiation data:
+
+ - version_id (2 bytes) (usually same as client)
+ - status_id  (1 byte) (0 if handshake continues, 1 if fallback, 0xFF if server does not understand client)
+
+
+
+6. IPR
 ========
 
 The NoiseSocket specification (this document) is hereby placed in the public domain.
 
 \pagebreak
 
-8.  References
+7.  References
 ================
