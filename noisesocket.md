@@ -1,6 +1,8 @@
 ---
 title:      'The NoiseSocket Protocol'
-author:     'Alexey Ermishkin (scratch@virgilsecurity.com)'
+author:     
+ - 'Alexey Ermishkin'
+ - 'Trevor Perrin'
 revision:   '1'
 date:       '2017-07-26'
 bibliography: 'my.bib'
@@ -25,7 +27,7 @@ communications.
 1. Overview
 ====================
 
-The Noise Protocol Framework describes simple **Noise protocols**.  A Noise
+The Noise Protocol Framework [@noise] describes simple **Noise protocols**.  A Noise
 protocol sends a fixed sequence of handshake messages based on a fixed set of
 cryptographic choices.  In some situations this is too rigid, and the responder
 needs flexibility to accept or reject the initiator's Noise protocol choice, or
@@ -109,7 +111,7 @@ Upon receiving an initial NoiseSocket message, the responder has five options:
 
 The initiator's first `negotiation_data` field must indicate the initial Noise protocol and what other Noise protocols the initiator can support.  How this is encoded is up to the application.
 
-If the responder's first `negotiation_data` field is empty, then the initial protocol was accepted.  If the field is non-empty, the `negotiation_data` must encode values that distinguish betwen the "explicit rejection", "fallback", and "reinitialization request" cases.  In the first case, the `negotiation_data` must encode an error message.  In the latter two cases, the `negotiation_data` must encode the Noise protocol the initiator should fallback to or reinitialize with.
+If the responder's first `negotiation_data` field is empty, then the initial protocol was accepted.  If the field is non-empty, it must encode values that distinguish betwen the "explicit rejection", "fallback", and "reinitialization request" cases.  In the first case, the `negotiation_data` must encode an error message.  In the latter two cases, the `negotiation_data` must encode the Noise protocol the initiator should fallback to or reinitialize with.
 
 When the initiator receives the first NoiseSocket response message, and for all later handshake messages received by both parties, the only options are silent rejection, explicit rejection, or acceptance. 
 
@@ -149,7 +151,7 @@ If the responder changes the Noise protocol, the prologue is set to the UTF-8 st
 5. API
 ======
 
-The initiator uses the following functions during the handshake phase.  These functions are described in the order they would typically be used to send the initial handshake message and process the first response.  In particular, the initiator would "peek" at the negotiation data, then decide whether reinitialization is necessary (based on whether the negotiation data indicates a reinitialization request or a fallback message).
+The initiator uses the following functions during the handshake phase.  These functions are described in the order they would typically be used to send the initial handshake message and process the first response.  In particular, the initiator would "peek" at the negotiation data in the first response message, then decide whether reinitialization is necessary (if the negotiation data indicates a reinitialization request or a fallback message).
 
 **`Initialize`**:
 
@@ -211,3 +213,11 @@ After the handshake is complete, both parties will call `WriteMessage` and `Read
 ========
 
 The NoiseSocket specification (this document) is hereby placed in the public domain.
+
+7. Acknowledgements
+========
+
+Thanks to Rhys Weatherley for helpful discussion.
+
+8. References
+========
