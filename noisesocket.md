@@ -107,13 +107,13 @@ Upon receiving an initial NoiseSocket message, the responder has five options:
 
  * **Change protocol and send reinitialization request**: The responder requests the initiator to send a NoiseSocket handshake message containing a handshake message from a new Noise protocol, different from the initial Noise protocol.  The `negotiation_data` field must be non-empty.  The `noise_message` field must be empty.
 
-When the initiator receives the first NoiseSocket response message, and for all later handshake messages received by both parties, the only options are silent rejection, explicit rejection, or acceptance. 
-
 The initiator's first `negotiation_data` field must indicate the initial Noise protocol and what other Noise protocols the initiator can support.  How this is encoded is up to the application.
 
-If the responder's first `negotiation_data` field is non-empty, the `negotiation_data` must distinguish betwen the "explicit rejection", "fallback", and "reinitialization request" cases.  In the first case, the `negotiation_data` must encode an error message.  In the latter two cases, the `negotiation_data` must encode the Noise protocol the initiator should fallback to or reinitialize with.
+If the responder's first `negotiation_data` field is empty, then the initial protocol was accepted.  If the field is non-empty, the `negotiation_data` must encode values that distinguish betwen the "explicit rejection", "fallback", and "reinitialization request" cases.  In the first case, the `negotiation_data` must encode an error message.  In the latter two cases, the `negotiation_data` must encode the Noise protocol the initiator should fallback to or reinitialize with.
 
-Below are some example negotiation flows:
+When the initiator receives the first NoiseSocket response message, and for all later handshake messages received by both parties, the only options are silent rejection, explicit rejection, or acceptance. 
+
+Example negotiation flows:
 
  * It's easy for the responder to change symmetric crypto options using a fallback protocol.  For example, if the initial Noise protocol is `Noise_XX_25519_AESGCM_SHA256`, the responder can fallback to `Noise_XX+fallback_25519_ChaChaPoly_BLAKE2s`.  This reuses the ephemeral public key from the initiator's initial message.
 
