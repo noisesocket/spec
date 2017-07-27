@@ -4,8 +4,9 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta http-equiv="Content-Style-Type" content="text/css" />
   <meta name="generator" content="pandoc" />
-  <meta name="author" content="Alexey Ermishkin (scratch@virgilsecurity.com)" />
-  <meta name="date" content="2017-07-12" />
+  <meta name="author" content="Alexey Ermishkin" />
+  <meta name="author" content="Trevor Perrin" />
+  <meta name="date" content="2017-07-26" />
   <title>The NoiseSocket Protocol</title>
   <style type="text/css">code{white-space: pre;}</style>
   <link rel="stylesheet" href="spec_markdown.css" type="text/css" />
@@ -13,124 +14,125 @@
 <body>
 <div id="header">
 <h1 class="title">The NoiseSocket Protocol</h1>
-<b>Author:</b> Alexey Ermishkin (scratch@virgilsecurity.com)<br/>
-<b>Revision:</b> 0draft<br/>
-<b>Date:</b> 2017-07-12<br/>
+<b>Author:</b> Alexey Ermishkin<br/>
+<b>Author:</b> Trevor Perrin<br/>
+<b>Revision:</b> 1<br/>
+<b>Date:</b> 2017-07-26<br/>
 </div>
 <div id="TOC">
 <h2 class="toc">Table of Contents</h2>
 <ul>
 <li><a href="#abstract"><strong>Abstract</strong></a></li>
-<li><a href="#messages">1. Messages</a><ul>
-<li><a href="#handshake-message">1.1. Handshake message</a></li>
-<li><a href="#negotiation-data">1.1.1. Negotiation data</a></li>
-<li><a href="#transport-message">1.2. Transport message</a></li>
+<li><a href="#overview">1. Overview</a></li>
+<li><a href="#message-formats">2. Message Formats</a><ul>
+<li><a href="#handshake-messages">2.1. Handshake messages</a></li>
+<li><a href="#transport-messages">2.2. Transport messages</a></li>
+<li><a href="#encrypted-payloads">2.3. Encrypted payloads</a></li>
 </ul></li>
-<li><a href="#prologue">2. Prologue</a></li>
+<li><a href="#negotiation">3. Negotiation</a></li>
+<li><a href="#prologue">4. Prologue</a></li>
 <li><a href="#api">5. API</a></li>
-<li><a href="#ipr">7. IPR</a></li>
+<li><a href="#ipr">6. IPR</a></li>
+<li><a href="#acknowledgements">7. Acknowledgements</a></li>
 <li><a href="#references">8. References</a></li>
 </ul>
 </div>
 <h1 id="abstract"><strong>Abstract</strong></h1>
-<p>NoiseSocket is an extension of the Noise Protocol Framework (developed by the authors of Signal and currently used by WhatsApp) that enables quick and seamless secure link between multiple parties with minimal code space overhead, small keys, and extremely fast speed. It uses raw public keys, modern AEAD ciphers and hash functions. NoiseSocket is designed to overcome the shortcomings of existing TLS implementations and targets IoT devices, microservices, back-end applications such as datacenter-to-datacenter communications, and use cases where third-party certificate of authority infrastructure is not optimal.</p>
-
-<h1 id="messages">1. Messages</h1>
-<p>There are two types of messages which differ by structure:</p>
+<p>NoiseSocket is an extension of the Noise Protocol Framework that enables quick and seamless secure connections with minimal code size, small keys, modern ciphers and hash functions, and extremely fast speed. It can be used with raw public keys instead of X.509 infrastructure and targets IoT devices, microservices, and back-end applications such as datacenter-to-datacenter communications.</p>
+<p></p>
+<h1 id="overview">1. Overview</h1>
+<p>The Noise Protocol Framework <span class="citation">[<a href="#ref-noise">1</a>]</span> describes simple <strong>Noise protocols</strong>. A Noise protocol sends a fixed sequence of handshake messages based on a fixed set of cryptographic choices. In some situations this is too rigid, and the responder needs flexibility to accept or reject the initiator's Noise protocol choice, or make its own choice based on options offered by the initiator.</p>
+<p>The <strong>NoiseSocket</strong> framework allows the initiator and responder to negotiate a particular Noise protocol. This is a two-step process:</p>
 <ul>
-<li>Section <a href="handshake-message">1.1</a> Handshake message</li>
-<li>Section <a href="transport-message">1.2</a> Transport message</li>
+<li><p>The initiator begins executing an initial Noise protocol and sends an initial Noise handshake message. As a preamble to this message, the initiator can send some <strong>negotiation data</strong> which indicates the initial Noise protocol and can advertise support for other Noise protocols.</p></li>
+<li><p>The responder can <strong>accept</strong> the initiator's choice of initial Noise protocol, <strong>change</strong> to a different Noise protocol, or <strong>reject</strong> the initiator's message entirely. The responder indicates this choice by sending some negotiation data back to the initiator, or closing the connection.</p></li>
 </ul>
-<h2 id="handshake-message">1.1. Handshake message</h2>
-<p>For the simplicity of processing, all handshake messages have identical structure:</p>
+<p>NoiseSocket doesn't specify the contents of negotiation data, since different applications will encode versions and advertise protocol support in different ways. NoiseSocket just defines a message format to transport this data, and APIs to access it.</p>
+<p>NoiseSocket handles two other low-level issues:</p>
+<ul>
+<li><p>NoiseSocket defines length fields for all messages, so NoiseSocket messages can be used with stream-based protocols like TCP.</p></li>
+<li><p>NoiseSocket defines padding fields which are included in every ciphertext, so that applications can pad their messages to avoid revealing plaintext lengths to an eavesdropper.</p></li>
+</ul>
+<h1 id="message-formats">2. Message Formats</h1>
+<p>A NoiseSocket protocol begins with a <strong>handshake phase</strong>. During the handshake phase each NoiseSocket message contains a single <strong>handshake message</strong> from some underlying Noise protocol, plus optional negotiation data.</p>
+<p>After the handshake completes, NoiseSocket enters the <strong>transport phase</strong> where each NoiseSocket message contains a <strong>transport message</strong> from some underlying Noise protocol.</p>
+<p>All transport messages and some handshake messages contain an encrypted Noise <strong>payload</strong>. Each encrypted payload contains a plaintext with a <strong>body</strong> (its actual contents) followed by <strong>padding</strong>.</p>
+<p>The following sections describe the format for NoiseSocket handshake and transport messages, and encrypted payloads.</p>
+<h2 id="handshake-messages">2.1. Handshake messages</h2>
+<p>All NoiseSocket handshake messages have the same structure:</p>
 <ul>
 <li>negotiation_data_len (2 bytes)</li>
 <li>negotiation_data</li>
 <li>noise_message_len (2 bytes)</li>
 <li>noise_message</li>
 </ul>
-<p>All numbers are big-endian.</p>
-<p>They are sent according to the corresponding Noise protocol.</p>
-<p>To implement Noise_XX 3 messages need to be sent:</p>
-<pre><code>  -&gt; ClientHello
-  &lt;- ServerAuth
-  -&gt; ClientAuth</code></pre>
-<p>2 for Noise_IK</p>
-<pre><code>  -&gt; ClientHello
-  &lt;- ServerAuth</code></pre>
-<p>3 If Fallback is used:</p>
-<pre><code>  -&gt; ClientHello
-  &lt;- ServerHello
-  -&gt; ClientAuth</code></pre>
-<h2 id="negotiation-data">1.1.1. Negotiation data</h2>
-<p>The negotiation_data field is used to identify the protocols used, versions, signs of using a fallback protocol and other data that must be processed before reading the actual noise_message.</p>
-<p>Though it can be present in every handshake message, it can safely be used only when it is included into the Noise handshake through Prologue or other mechanisms like calling MixHash() before writing the message</p>
-<p>An example first message negotiation_data which allows to determine which algorithms and pattern were used:</p>
+<p>The <code>negotiation_data_len</code> and <code>noise_message_len</code> fields are 2-byte unsigned integers, encoded in big-endian, that store the number of bytes for the following <code>negotiation_data</code> and <code>noise_message</code> fields.</p>
+<h2 id="transport-messages">2.2. Transport messages</h2>
+<p>All NoiseSocket transport messages have the same structure:</p>
 <ul>
-<li>version_id (2 bytes) ( has value <code>1</code> by default)</li>
-<li>pattern_id (1 byte)</li>
-<li>dh_id (1 byte)</li>
-<li>cipher_id (1 byte)</li>
-<li>hash_id (1 byte)</li>
-</ul>
-<p>pattern_id, dh_id, cipher_id and hash_id can be taken from the <a href="https://github.com/rweather/noise-c/blob/master/include/noise/protocol/constants.h">Noise-c</a> implementation</p>
-<p>For example, NoiseXX_25519_AESGCM_SHA256 would be</p>
-<ul>
-<li>pattern_id : 9</li>
-<li>dh_id : 1</li>
-<li>cipher_id : 2</li>
-<li>hash_id : 3</li>
-</ul>
-<p>An example of second message negotiation data:</p>
-<ul>
-<li>version_id (1 byte) (usually same as client)</li>
-<li>status_id (1 byte) (0 if handshake continues, 1 if fallback, 0xFF if server does not understand client)</li>
-</ul>
-<p>Third message's negotiation data is always zero length.</p>
-<h2 id="transport-message">1.2. Transport message</h2>
-<p>Each transport message has a special 'data_len' field inside its plaintext payload, which specifies the size of the actual data. Everything after the data is considered padding. 65517 is the max value for data_len: 65535 (noise_message_len) - 16 (for authentication tag) - 2 (for data_len field itself)</p>
-<p>The encrypted packet has the following structure:</p>
-<ul>
-<li>packet_len (2 bytes)</li>
-<li>encrypted data</li>
-</ul>
-<p>Plaintext payload has the following structure:</p>
-<ul>
-<li>data_len (2 bytes)</li>
-<li>data</li>
-<li>remaining bytes: padding</li>
-</ul>
-<h1 id="prologue">2. Prologue</h1>
-<p>Client uses following extra data and fields from the first message to calculate the Noise prologue:</p>
-<ul>
-<li>&quot;NoiseSocketInit&quot; string</li>
-<li>negotiation_data_len</li>
-<li>negotiation_data</li>
-</ul>
-<p>If server decides to start a new protocol instead of responding to the first handshake message, it calculate the Noise prologue using the <strong>full first message contents</strong> plus the length and negotiation_data of its own response. String identifier also changes to &quot;NoiseSocketReInit&quot;.</p>
-<p>Thus the prologue structure:</p>
-<ul>
-<li>&quot;NoiseSocketReInit&quot; string</li>
-<li>negotiation_data_len</li>
-<li>negotiation_data</li>
-<li>noise_message_len</li>
+<li>noise_message_len (2 bytes)</li>
 <li>noise_message</li>
-<li>negotiation_data_len</li>
-<li>negotiation_data</li>
+</ul>
+<p>The <code>noise_message_len</code> field is a 2-byte unsigned integer, encoded in big-endian, that stores the number of bytes for the following <code>noise_message</code> field.</p>
+<h2 id="encrypted-payloads">2.3. Encrypted payloads</h2>
+<p>Some Noise messages will carry an encrypted payload. When this payload is decrypted, the plaintext will have the following structure:</p>
+<ul>
+<li>body_len (2 bytes)</li>
+<li>body</li>
+<li>padding</li>
+</ul>
+<p>The <code>body_len</code> field is a 2-byte unsigned integer, encoded in big-endian, that stores the number of bytes for the following <code>body</code> field. Following the <code>body</code> field the remainder of the plaintext will be padding bytes, which may contain arbitrary data and must be ignored by the recipient.</p>
+<h1 id="negotiation">3. Negotiation</h1>
+<p>The initiator will choose the initial underlying Noise protocol, and will indicate this to the responder using the <code>negotiation_data</code> field.</p>
+<p>Upon receiving an initial NoiseSocket message, the responder has five options:</p>
+<ul>
+<li><p><strong>Silent rejection</strong>: The responder closes the network connection.</p></li>
+<li><p><strong>Explicit rejection</strong>: The responder sends a single NoiseSocket handshake message. The <code>negotiation_data</code> field must be non-empty and contain an error message. The <code>noise_message</code> field must be empty. After sending this message, the responder closes the network connection.</p></li>
+<li><p><strong>Acceptance</strong>: The responder sends a NoiseSocket handshake message containing the next handshake message in the initial Noise protocol. The <code>negotiation_data</code> field must be empty.</p></li>
+<li><p><strong>Change protocol and send fallback message</strong>: The responder sends a NoiseSocket handshake message containing a handshake message from a new Noise protocol, different from the initial Noise protocol. The <code>negotiation_data</code> field must be non-empty. The <code>noise_message</code> field must be non-empty.</p></li>
+<li><p><strong>Change protocol and send reinitialization request</strong>: The responder requests the initiator to send a NoiseSocket handshake message containing a handshake message from a new Noise protocol, different from the initial Noise protocol. The <code>negotiation_data</code> field must be non-empty. The <code>noise_message</code> field must be empty.</p></li>
+</ul>
+<p>The initiator's first <code>negotiation_data</code> field must indicate the initial Noise protocol and what other Noise protocols the initiator can support. How this is encoded is up to the application.</p>
+<p>If the responder's first <code>negotiation_data</code> field is empty, then the initial protocol was accepted. If the field is non-empty, it must encode values that distinguish betwen the &quot;explicit rejection&quot;, &quot;fallback&quot;, and &quot;reinitialization request&quot; cases. In the first case, the <code>negotiation_data</code> must encode an error message. In the latter two cases, the <code>negotiation_data</code> must encode the Noise protocol the initiator should fallback to or reinitialize with.</p>
+<p>When the initiator receives the first NoiseSocket response message, and for all later handshake messages received by both parties, the only options are silent rejection, explicit rejection, or acceptance.</p>
+<p>Example negotiation flows:</p>
+<ul>
+<li><p>It's easy for the responder to change symmetric crypto options using a fallback protocol. For example, if the initial Noise protocol is <code>Noise_XX_25519_AESGCM_SHA256</code>, the responder can fallback to <code>Noise_XX+fallback_25519_ChaChaPoly_BLAKE2s</code>. This reuses the ephemeral public key from the initiator's initial message.</p></li>
+<li><p>If the initiator attempts 0-RTT encryption that the responder fails to decrypt, the responder can use a fallback protocol. For example, if the initial Noise protocol is <code>Noise_IK_25519_AESGCM_SHA256</code>, the responder can fallback to <code>Noise_XX+fallback_25519_AESGCM_SHA256</code>. This reuses the ephemeral public key from the initiator's initial message.</p></li>
+<li><p>If the responder wants to use a DH function that the initiator supports but did not send an ephemeral public key for, in the initial message, then the responder might need to request reinitialization. For example, if the initial Noise protocol is <code>Noise_XX_25519_AESGCM_SHA256</code>, the responder can request reinitialization to <code>Noise_XX_448_AESGCM_SHA256</code>, causing the initiator to respond with a NoiseSocket message containing the initial message from the <code>Noise_XX</code> pattern with a Curve448 ephemeral public key.</p></li>
+</ul>
+<h1 id="prologue">4. Prologue</h1>
+<p>Noise protocols take a <strong>prologue</strong> input. The prologue is cryptographically authenticated to make sure both parties have the same view of it.</p>
+<p>The prologue for the initial Noise protocol is set to the UTF-8 string &quot;NoiseSocketInit&quot; followed by all bytes transmitted prior to the <code>noise_message_len</code>. This consists of the following values concatenated together:</p>
+<ul>
+<li>The UTF-8 string &quot;NoiseSocketInit&quot;</li>
+<li>The initial message's <code>negotiation_data_len</code></li>
+<li>The initial message's <code>negotiation_data</code></li>
+</ul>
+<p>If the responder changes the Noise protocol, the prologue is set to the UTF-8 string &quot;NoiseSocketReInit&quot; followed by all bytes received and transmitted prior to the <code>noise_message_len</code>. This consists of the following values concatenated together:</p>
+<ul>
+<li>The UTF-8 string &quot;NoiseSocketReInit&quot;</li>
+<li>The initial message's <code>negotiation_data_len</code></li>
+<li>The initial message's <code>negotiation_data</code></li>
+<li>The initial message's <code>noise_message_len</code></li>
+<li>The initial message's <code>noise_message</code></li>
+<li>The responding message's <code>negotiation_data_len</code></li>
+<li>The responding message's <code>negotiation_data</code></li>
 </ul>
 <h1 id="api">5. API</h1>
-<p>Client and server calls these in sequence.</p>
-<p><strong><code>InitializeClient</code></strong>:</p>
+<p>The initiator uses the following functions during the handshake phase. These functions are described in the order they would typically be used to send the initial handshake message and process the first response. In particular, the initiator would &quot;peek&quot; at the negotiation data in the first response message, then decide whether reinitialization is necessary (if the negotiation data indicates a reinitialization request or a fallback message).</p>
+<p><strong><code>Initialize</code></strong>:</p>
 <ul>
-<li>INPUT: dh, cipher, hash</li>
+<li>INPUT: pattern, dh, cipher, hash</li>
 <li>OUTPUT: session object</li>
 </ul>
 <p><strong><code>WriteHandshakeMessage</code></strong>:</p>
 <ul>
-<li>INPUT: [negotiation_data][, cleartext_body]
+<li>INPUT: negotiation_data, message_body, padded_len
 <ul>
-<li>negotiation_data is zero-length if omitted</li>
-<li>cleartext_body is zero-length if omitted</li>
+<li><code>negotiation_data</code> is zero-length if omitted</li>
+<li><code>message_body</code> is zero-length if omitted</li>
+<li>If this message has an encrypted payload and <code>noise_message_len</code> would be less than <code>padded_len</code>, padding is added to make <code>noise_message_len</code> equal <code>padded_len</code>.</li>
 </ul></li>
 <li>OUTPUT: handshake_message</li>
 </ul>
@@ -139,28 +141,49 @@
 <li>INPUT: handshake_message</li>
 <li>OUTPUT: negotiation_data</li>
 </ul>
+<p><strong><code>Reinitialize</code></strong>:</p>
+<ul>
+<li>INPUT: fallback pattern or reinitialization pattern, dh, cipher, hash</li>
+<li>OUTPUT: session object</li>
+</ul>
 <p><strong><code>ReadHandshakeMessage</code></strong>:</p>
 <ul>
 <li>INPUT: handshake_message</li>
 <li>OUTPUT: message_body</li>
 </ul>
-<p>After WriteClientAuth / ReadClient, both parties can call Write and Read:</p>
-<p><strong><code>Write</code></strong>:</p>
+<p>The server will use the same functions, except it will first &quot;peek&quot; at the initial message, then call <code>Initialize</code> if it is accepting the initial protocol, or <code>Reinitialize</code> if it is changing protocols with a fallback message or reinitialization request.</p>
+<p>If the responder is sending an explicit rejection or reinitialization request, it will use the following function:</p>
+<p><strong><code>WriteEmptyHandshakeMessage</code></strong>:</p>
 <ul>
-<li>INPUT: transport_body[, padded_len]
+<li>INPUT: negotiation_data</li>
+<li>OUTPUT: handshake_message</li>
+</ul>
+<p>Following the first exchange of handshake message, the parties will continue calling <code>ReadHandshakeMessage</code> and <code>WriteHandshakeMessage</code> until the handshake is complete.</p>
+<p>After the handshake is complete, both parties will call <code>WriteMessage</code> and <code>ReadMessage</code> to send transport messages. Every call to <code>WriteMessage</code> will produce a NoiseSocket transport message, and every call to <code>ReadMessage</code> will decrypt a NoiseSocket transport message and return its body.</p>
+
+<p><strong><code>WriteMessage</code></strong>:</p>
 <ul>
-<li>padded_len is zero (no padding) if omitted</li>
+<li>INPUT: message_body, padded_len
+<ul>
+<li><code>padded_len</code> is zero (no padding) if omitted</li>
+<li>If <code>noise_message_len</code> would be less than <code>padded_len</code>, padding is added to make <code>noise_message_len</code> equal <code>padded_len</code>.</li>
 </ul></li>
 <li>OUTPUT: transport_message</li>
 </ul>
-<p><strong><code>Read</code></strong>:</p>
+<p><strong><code>ReadMessage</code></strong>:</p>
 <ul>
 <li>INPUT: transport_message</li>
-<li>OUTPUT: transport_body</li>
+<li>OUTPUT: message_body</li>
 </ul>
-<h1 id="ipr">7. IPR</h1>
+<h1 id="ipr">6. IPR</h1>
 <p>The NoiseSocket specification (this document) is hereby placed in the public domain.</p>
-
-<h1 id="references">8. References</h1>
+<h1 id="acknowledgements">7. Acknowledgements</h1>
+<p>Thanks to Rhys Weatherley for helpful discussion.</p>
+<h1 id="references" class="unnumbered">8. References</h1>
+<div id="refs" class="references">
+<div id="ref-noise">
+<p>[1] T. Perrin, “The Noise Protocol Framework.” 2017. <a href="https://noiseprotocol.org" class="uri">https://noiseprotocol.org</a></p>
+</div>
+</div>
 </body>
 </html>
