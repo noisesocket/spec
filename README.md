@@ -1,6 +1,11 @@
 Noise Socket
 ---------
-NoiseSocket is an extension of the Noise Protocol Framework (developed by the authors of Signal and currently used by WhatsApp) that enables quick and seamless Transport Layer Security (TLS) between multiple parties with minimal code space overhead, small keys, and extremely fast speed.
-NoiseSocket is designed to overcome the shortcomings of existing TLS implementations and targets IoT devices, microservices, back-end applications such as datacenter-to-datacenter communications, and use cases where third-party certificate of authority infrastructure is not optimal.
+NoiseSocket is an extension of the Noise Protocol Framework that enables quick and seamless secure connections with minimal code size, small keys, modern ciphers and hash functions, and extremely fast speed. It can be used with raw public keys instead of X.509 infrastructure and targets IoT devices, microservices, and back-end applications such as datacenter-to-datacenter communications.
 
-See  [noisesocket.md](noisesocket.md) for pandoc markdown and [output](output) folder for pdf and html versions
+See  [output/noisesocket.pdf](noisesocket.pfd) for full spec
+
+Implementations
+--------------
+
+[Golang library](https://github.com/go-noisesocket/noisesocket/)
+[NGINX Module](https://github.com/VirgilSecurity/virgil-nginx-noise-socket)
