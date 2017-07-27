@@ -6,7 +6,7 @@
   <meta name="generator" content="pandoc" />
   <meta name="author" content="Alexey Ermishkin" />
   <meta name="author" content="Trevor Perrin" />
-  <meta name="date" content="2017-07-26" />
+  <meta name="date" content="2017-07-27" />
   <title>The NoiseSocket Protocol</title>
   <style type="text/css">code{white-space: pre;}</style>
   <link rel="stylesheet" href="spec_markdown.css" type="text/css" />
@@ -17,7 +17,7 @@
 <b>Author:</b> Alexey Ermishkin<br/>
 <b>Author:</b> Trevor Perrin<br/>
 <b>Revision:</b> 1<br/>
-<b>Date:</b> 2017-07-26<br/>
+<b>Date:</b> 2017-07-27<br/>
 </div>
 <div id="TOC">
 <h2 class="toc">Table of Contents</h2>
@@ -103,15 +103,15 @@
 </ul>
 <h1 id="prologue">4. Prologue</h1>
 <p>Noise protocols take a <strong>prologue</strong> input. The prologue is cryptographically authenticated to make sure both parties have the same view of it.</p>
-<p>The prologue for the initial Noise protocol is set to the UTF-8 string &quot;NoiseSocketInit&quot; followed by all bytes transmitted prior to the <code>noise_message_len</code>. This consists of the following values concatenated together:</p>
+<p>The prologue for the initial Noise protocol is set to the UTF-8 string &quot;NoiseSocketInit1&quot; followed by all bytes transmitted prior to the <code>noise_message_len</code>. This consists of the following values concatenated together:</p>
 <ul>
-<li>The UTF-8 string &quot;NoiseSocketInit&quot;</li>
+<li>The UTF-8 string &quot;NoiseSocketInit1&quot;</li>
 <li>The initial message's <code>negotiation_data_len</code></li>
 <li>The initial message's <code>negotiation_data</code></li>
 </ul>
-<p>If the responder changes the Noise protocol, the prologue is set to the UTF-8 string &quot;NoiseSocketReInit&quot; followed by all bytes received and transmitted prior to the <code>noise_message_len</code>. This consists of the following values concatenated together:</p>
+<p>If the responder changes the Noise protocol, the prologue is set to the UTF-8 string &quot;NoiseSocketInit2&quot; followed by all bytes received and transmitted prior to the <code>noise_message_len</code>. This consists of the following values concatenated together:</p>
 <ul>
-<li>The UTF-8 string &quot;NoiseSocketReInit&quot;</li>
+<li>The UTF-8 string &quot;NoiseSocketInit2&quot;</li>
 <li>The initial message's <code>negotiation_data_len</code></li>
 <li>The initial message's <code>negotiation_data</code></li>
 <li>The initial message's <code>noise_message_len</code></li>
@@ -158,7 +158,7 @@
 <li>INPUT: negotiation_data</li>
 <li>OUTPUT: handshake_message</li>
 </ul>
-<p>Following the first exchange of handshake message, the parties will continue calling <code>ReadHandshakeMessage</code> and <code>WriteHandshakeMessage</code> until the handshake is complete.</p>
+<p>Following the first exchange of handshake messages, the parties will continue calling <code>ReadHandshakeMessage</code> and <code>WriteHandshakeMessage</code> until the handshake is complete.</p>
 <p>After the handshake is complete, both parties will call <code>WriteMessage</code> and <code>ReadMessage</code> to send transport messages. Every call to <code>WriteMessage</code> will produce a NoiseSocket transport message, and every call to <code>ReadMessage</code> will decrypt a NoiseSocket transport message and return its body.</p>
 
 <p><strong><code>WriteMessage</code></strong>:</p>

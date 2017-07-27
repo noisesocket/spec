@@ -4,7 +4,7 @@ author:
  - 'Alexey Ermishkin'
  - 'Trevor Perrin'
 revision:   '1'
-date:       '2017-07-26'
+date:       '2017-07-27'
 bibliography: 'my.bib'
 link-citations: 'true'
 csl:        'ieee-with-url.csl'
@@ -131,15 +131,15 @@ Example negotiation flows:
  
 Noise protocols take a **prologue** input.  The prologue is cryptographically authenticated to make sure both parties have the same view of it.
 
-The prologue for the initial Noise protocol is set to the UTF-8 string "NoiseSocketInit" followed by all bytes transmitted prior to the `noise_message_len`.  This consists of the following values concatenated together:
+The prologue for the initial Noise protocol is set to the UTF-8 string "NoiseSocketInit1" followed by all bytes transmitted prior to the `noise_message_len`.  This consists of the following values concatenated together:
 
- * The UTF-8 string "NoiseSocketInit"
+ * The UTF-8 string "NoiseSocketInit1"
  * The initial message's `negotiation_data_len`
  * The initial message's `negotiation_data`
 
-If the responder changes the Noise protocol, the prologue is set to the UTF-8 string "NoiseSocketReInit" followed by all bytes received and transmitted prior to the `noise_message_len`.  This consists of the following values concatenated together:
+If the responder changes the Noise protocol, the prologue is set to the UTF-8 string "NoiseSocketInit2" followed by all bytes received and transmitted prior to the `noise_message_len`.  This consists of the following values concatenated together:
 
- * The UTF-8 string "NoiseSocketReInit"
+ * The UTF-8 string "NoiseSocketInit2"
  * The initial message's `negotiation_data_len`
  * The initial message's `negotiation_data`
  * The initial message's `noise_message_len`
@@ -190,7 +190,7 @@ If the responder is sending an explicit rejection or reinitialization request, i
  * INPUT: negotiation_data
  * OUTPUT: handshake_message
 
-Following the first exchange of handshake message, the parties will continue calling `ReadHandshakeMessage` and `WriteHandshakeMessage` until the handshake is complete.
+Following the first exchange of handshake messages, the parties will continue calling `ReadHandshakeMessage` and `WriteHandshakeMessage` until the handshake is complete.
 
 After the handshake is complete, both parties will call `WriteMessage` and `ReadMessage` to send transport messages.  Every call to `WriteMessage` will produce a NoiseSocket transport message, and every call to `ReadMessage` will decrypt a NoiseSocket transport message and return its body.
 
