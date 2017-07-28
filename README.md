@@ -2,7 +2,7 @@ Noise Socket
 ---------
 NoiseSocket is an extension of the Noise Protocol Framework that enables quick and seamless secure connections with minimal code size, small keys, modern ciphers and hash functions, and extremely fast speed. It can be used with raw public keys instead of X.509 infrastructure and targets IoT devices, microservices, and back-end applications such as datacenter-to-datacenter communications.
 
-See  [output/noisesocket.pdf](noisesocket.pfd) for full spec
+See  [output/noisesocket.pdf](noisesocket.pdf) for full spec
 
 Implementations
 --------------
