@@ -10,3 +10,5 @@ Implementations
 [Golang library](https://github.com/go-noisesocket/noisesocket/)
 
 [NGINX Module](https://github.com/VirgilSecurity/virgil-nginx-noise-socket)
+
+[PKI Integration] (https://github.com/go-noisesocket/noisesocket/virgil)
